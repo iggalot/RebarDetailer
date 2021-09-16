@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.31613.86
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RebarDetailsLibrary", "RebarDetailsLibrary.csproj", "{62FCF263-8993-4DDA-8BEA-0771AB5953C0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RebarDetailsDriver", "..\RebarDetailsDriver\RebarDetailsDriver.csproj", "{4CE3BC84-FEFD-424F-A010-288D9D96F32D}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{62FCF263-8993-4DDA-8BEA-0771AB5953C0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{62FCF263-8993-4DDA-8BEA-0771AB5953C0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{62FCF263-8993-4DDA-8BEA-0771AB5953C0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{62FCF263-8993-4DDA-8BEA-0771AB5953C0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4CE3BC84-FEFD-424F-A010-288D9D96F32D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4CE3BC84-FEFD-424F-A010-288D9D96F32D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4CE3BC84-FEFD-424F-A010-288D9D96F32D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4CE3BC84-FEFD-424F-A010-288D9D96F32D}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {6C94C894-B9A3-4E7B-8A8C-983FCB4CFF26}
+	EndGlobalSection
+EndGlobal
