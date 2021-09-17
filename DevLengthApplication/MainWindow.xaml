@@ -5,11 +5,11 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:DevLengthApplication"
         mc:Ignorable="d"
-        Title="MainWindow" Width="850" Height="400">
+        Title="Development Length Calculator v1.0" Width="1050" Height="500">
     <Border Background="Teal" Margin="10" Padding="25">
         <Grid VerticalAlignment="Center">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="70"/>
+                <ColumnDefinition Width="80"/>
                 <ColumnDefinition Width="110"/>
                 <ColumnDefinition Width="400"/>
                 <ColumnDefinition Width="*"/>
@@ -23,10 +23,10 @@
                 <RowDefinition Height="*"/>
                 <RowDefinition Height="*"/>
                 <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
             <TextBlock Name="tbDevelopmentLengthStraight" FontSize="20" Text= "{Binding GetDevelopmentLengthStraight}" Width="75" Height="30" Background="Gray"/>
-
-            <Button Grid.Row="0" Grid.Column="1" Content="SOLVE" Name="btnSolve" Click="btnSolve_Click" Width="100" Height="25" VerticalAlignment="Bottom"/>
 
             <Label Grid.Row="1" Grid.Column="0" Content="Bar #"/>
             <ComboBox Grid.Row="1" Grid.Column="1" Name="cmbBarSize" Width="75" Height="20" SelectionChanged="cmbSelectionChanged"/>
@@ -46,7 +46,7 @@
             <Label Grid.Row="6"  Grid.Column="0" Content="LW Concrete"/>
             <ComboBox Grid.Row="6" Grid.Column="1" Name="cmbLightweightConcrete" Width="75" Height="20" SelectionChanged="cmbSelectionChanged"/>
 
-            <Canvas Grid.RowSpan ="6" Grid.Column="2" x:Name="MainCanvas" Width="400" Height="250" Background="LightGray"/>
+            <Canvas Grid.RowSpan ="6" Grid.Column="2" x:Name="MainCanvas" Width="400" Height="260" Background="LightGray"/>
 
             <!--<StackPanel Grid.Row="7" Grid.ColumnSpan="3" Orientation="Horizontal" HorizontalAlignment="Center">
                 <TextBlock Name="tbBarSize" Text= "{Binding GetSelectedBarSizeLabel}" Width="75" Height="30" Background="red"/>
@@ -54,7 +54,22 @@
                 <TextBlock Name="tbConcreteCompStrength" Text= "{Binding GetSelectedConcreteCompStrengthLabel}" Width="75" Height="30" Background="blue"/>
             </StackPanel>-->
 
-            <TextBlock Grid.Row="0" Grid.RowSpan="6" Grid.Column="4" Name="tbFactors" Text="{Binding DisplayFactors}" Width="200" Background="White"/>
+            <StackPanel Grid.Row="7"  Grid.Column="0" Grid.ColumnSpan="3" Orientation="Horizontal">
+                <Label Content="Clear Spacing"/>
+                <TextBox Name="tbClearSpacing" Text="{Binding GetClearSpacing}" Width="75" Height="20" TextChanged="TextBox_TextChanged"/>
+                <Label Content="Side Cover"/>
+                <TextBox Name="tbSideCover" Text="{Binding GetSideCover}" Width="75" Height="20" TextChanged="TextBox_TextChanged"/>
+            </StackPanel>
+            <StackPanel Grid.Row="8"  Grid.Column="0" Grid.ColumnSpan="3" Orientation="Horizontal">
+                <Label Content="Top/Bottom Cover"/>
+                <TextBox Name="tbBottomCover" Text="{Binding GetBottomCover}" Width="75" Height="20" TextChanged="TextBox_TextChanged"/>
+                <Label Content="Min Transverse Reinf"/>
+                <ComboBox Name="cmbHasMinTransverseReinf" Width="75" Height="20" SelectionChanged="cmbSelectionChanged"/>
+            </StackPanel>
+
+            <ScrollViewer Grid.Row="0" Grid.RowSpan="6" Grid.Column="4" Width="400" Height="375">
+                <TextBlock Name="tbFactors" Text="{Binding DisplayFactors}"  Background="White"/>
+            </ScrollViewer>
         </Grid>
     </Border>
 </Window>

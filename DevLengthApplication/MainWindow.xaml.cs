@@ -23,18 +23,7 @@ namespace DevLengthApplication
     /// </summary>
     public partial class MainWindow : Window
     {
-        private InputViewModel m_inputViewModel;
-        private InputViewModel InputVM 
-        {
-            get
-            {
-                return m_inputViewModel;
-            }
-            set
-            {
-                m_inputViewModel = value;
-            } 
-        }
+        private InputViewModel InputVM { get; set; }
 
         public bool firstLaunched = true;
 
@@ -47,6 +36,8 @@ namespace DevLengthApplication
             OnUserCreate();
 
             DataContext = InputVM;
+
+            firstLaunched = false; // tells us our initial setup is correct
         }
 
         private void OnUserCreate()
@@ -54,19 +45,33 @@ namespace DevLengthApplication
             InputVM.Create(this);
         }
 
+
         private void cmbSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            if (firstLaunched)
+            if (!firstLaunched)
             {
-                firstLaunched = false;
+                InputVM.Update();
                 return;
             }
 
-            InputVM.Update();
+
         }
 
-        private void btnSolve_Click(object sender, RoutedEventArgs e)
+        private void TextBox_TextChanged(object sender, TextChangedEventArgs e)
         {
+            //if (!firstLaunched)
+            //{
+            //    {
+            //        InputVM.Update();
+            //        return;
+            //    }
+            //}
+            //if(!firstLaunched)
+            //{
+            //    var binding = ((TextBox)sender).GetBindingExpression(TextBox.TextProperty);
+            //    binding.UpdateSource();
+            //    //InputVM.Update();
+            //}
 
         }
     }
