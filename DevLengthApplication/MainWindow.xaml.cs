@@ -21,22 +21,27 @@ namespace DevLengthApplication
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
-    public partial class MainWindow : Window, INotifyPropertyChanged
+    public partial class MainWindow : Window
     {
-        InputViewModel InputVM { get; set; }
-        bool firstLaunched = true;
-
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        // Create the OnPropertyChanged method to raise the event
-        // The calling member's name will be used as the parameter.
-        protected void OnPropertyChanged(string name)
+        private InputViewModel m_inputViewModel;
+        private InputViewModel InputVM 
         {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
+            get
+            {
+                return m_inputViewModel;
+            }
+            set
+            {
+                m_inputViewModel = value;
+            } 
         }
+
+        public bool firstLaunched = true;
 
         public MainWindow()
         {
+            InputVM = new InputViewModel();
+
             InitializeComponent();
 
             OnUserCreate();
@@ -46,23 +51,23 @@ namespace DevLengthApplication
 
         private void OnUserCreate()
         {
-            InputVM = new InputViewModel(this);
+            InputVM.Create(this);
+        }
+
+        private void cmbSelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (firstLaunched)
+            {
+                firstLaunched = false;
+                return;
+            }
+
+            InputVM.Update();
         }
 
         private void btnSolve_Click(object sender, RoutedEventArgs e)
         {
 
-        }
-
-        private void cmbBarSize_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            if(firstLaunched)
-            {
-                firstLaunched = false;
-                return;
-            }
-            
-            InputVM.Update();
         }
     }
 }

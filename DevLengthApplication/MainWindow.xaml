@@ -5,17 +5,56 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:DevLengthApplication"
         mc:Ignorable="d"
-        Title="MainWindow">
+        Title="MainWindow" Width="850" Height="400">
     <Border Background="Teal" Margin="10" Padding="25">
-        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="25">
-            <StackPanel Orientation="Vertical" VerticalAlignment="Center" HorizontalAlignment="Center">
-                <StackPanel Orientation="Horizontal" x:Name="pnlInputInfo" Width="300" Height="250">
-                    <ComboBox Name="cmbBarSize" Margin="10,10,0,13" Width="200" Height="30" SelectionChanged="cmbBarSize_SelectionChanged"/>
-                    <TextBlock Text= "{Binding GetSelectedBarSizeLabel}" />
-                </StackPanel>
-                <Button x:Name="btnSolve" Click="btnSolve_Click" Width="100" Height="25"/>
-            </StackPanel>
-            <Canvas x:Name="MainCanvas" Width="300" Height="300" Background="LightGray"/>
-        </StackPanel>
+        <Grid VerticalAlignment="Center">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="70"/>
+                <ColumnDefinition Width="110"/>
+                <ColumnDefinition Width="400"/>
+                <ColumnDefinition Width="*"/>
+
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            <TextBlock Name="tbDevelopmentLengthStraight" FontSize="20" Text= "{Binding GetDevelopmentLengthStraight}" Width="75" Height="30" Background="Gray"/>
+
+            <Button Grid.Row="0" Grid.Column="1" Content="SOLVE" Name="btnSolve" Click="btnSolve_Click" Width="100" Height="25" VerticalAlignment="Bottom"/>
+
+            <Label Grid.Row="1" Grid.Column="0" Content="Bar #"/>
+            <ComboBox Grid.Row="1" Grid.Column="1" Name="cmbBarSize" Width="75" Height="20" SelectionChanged="cmbSelectionChanged"/>
+            
+            <Label Grid.Row="2" Grid.Column="0" Content="fy"/>
+            <ComboBox Grid.Row="2" Grid.Column="1" Name="cmbSteelYieldStrength" Width="75" Height="20" SelectionChanged="cmbSelectionChanged"/>
+
+            <Label Grid.Row="3"  Grid.Column="0" Content="f'c"/>
+            <ComboBox Grid.Row="3" Grid.Column="1" Name="cmbConcreteCompStrength" Width="75" Height="20" SelectionChanged="cmbSelectionChanged"/>
+
+            <Label Grid.Row="4"  Grid.Column="0" Content="Epoxy Bars"/>
+            <ComboBox Grid.Row="4" Grid.Column="1" Name="cmbEpoxy" Width="75" Height="20" SelectionChanged="cmbSelectionChanged"/>
+
+            <Label Grid.Row="5"  Grid.Column="0" Content="Top Bars"/>
+            <ComboBox Grid.Row="5" Grid.Column="1" Name="cmbTopBars" Width="75" Height="20" SelectionChanged="cmbSelectionChanged"/>
+
+            <Label Grid.Row="6"  Grid.Column="0" Content="LW Concrete"/>
+            <ComboBox Grid.Row="6" Grid.Column="1" Name="cmbLightweightConcrete" Width="75" Height="20" SelectionChanged="cmbSelectionChanged"/>
+
+            <Canvas Grid.RowSpan ="6" Grid.Column="2" x:Name="MainCanvas" Width="400" Height="250" Background="LightGray"/>
+
+            <!--<StackPanel Grid.Row="7" Grid.ColumnSpan="3" Orientation="Horizontal" HorizontalAlignment="Center">
+                <TextBlock Name="tbBarSize" Text= "{Binding GetSelectedBarSizeLabel}" Width="75" Height="30" Background="red"/>
+                <TextBlock Name="tbSteelYieldStrength" Text= "{Binding GetSelectedSteelYieldStrengthLabel}" Width="75" Height="30" Background="Green"/>
+                <TextBlock Name="tbConcreteCompStrength" Text= "{Binding GetSelectedConcreteCompStrengthLabel}" Width="75" Height="30" Background="blue"/>
+            </StackPanel>-->
+
+            <TextBlock Grid.Row="0" Grid.RowSpan="6" Grid.Column="4" Name="tbFactors" Text="{Binding DisplayFactors}" Width="200" Background="White"/>
+        </Grid>
     </Border>
 </Window>

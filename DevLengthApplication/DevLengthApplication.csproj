@@ -101,5 +101,11 @@
   <ItemGroup>
     <Folder Include="Views\" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\RebarDetailsLibrary\RebarDetailsLibrary.csproj">
+      <Project>{62fcf263-8993-4dda-8bea-0771ab5953c0}</Project>
+      <Name>RebarDetailsLibrary</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

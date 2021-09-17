@@ -13,7 +13,7 @@ namespace RebarDetailsLibrary
         public static double Straight(
             int bar_size, 
             double steel_strength, 
-            float concrete_strength,
+            double concrete_strength,
             bool DEBUG_MODE = !REBAR_DEBUG_MODE,
             double Ktr = 0, 
             bool trans_reinf_provided = false, 
@@ -59,10 +59,10 @@ namespace RebarDetailsLibrary
                 Console.WriteLine("         " + steel_yield_str.ToString() +  " : " + concrete_comp_str.ToString() + " : " + lambda.ToString());
             }
 
-            psi_e = epoxy_coated ? 1.3 : 1.0;
-            psi_s = bar_size <= 7 ? 0.7 : 1.0;
-            psi_t = top_bar_position ? 1.2 : 1.0;
-            psi_g = (steel_yield_str <= 60000) ? 1.0 : ((steel_yield_str > 80000) ? 1.15 : 1.30);
+            psi_e = ComputePSI_E(epoxy_coated);
+            psi_s = ComputePSI_S(bar_size);
+            psi_t = ComputePSI_T(top_bar_position);
+            psi_g = ComputePSI_G(steel_yield_str);
 
             // Apply the limit from ACI318-19 Table 25.4.2.5 for product of psi_e and psi_t greater than 1.7
             psi_e_x_psi_t_product = (psi_e * psi_t > 1.7) ? 1.7 : psi_e * psi_t;
@@ -149,6 +149,27 @@ namespace RebarDetailsLibrary
 
             // Round up the result
             return Math.Min(Math.Ceiling(devLength),Math.Ceiling(devLength_allfactors));
+        }
+
+        public static double ComputePSI_E(bool status)
+        {
+            return (status ? 1.3 : 1.0);
+        }
+
+        public static double ComputePSI_G(double yield)
+        {
+            return (yield <= 60000) ? 1.0 : ((yield > 80000) ? 1.15 : 1.30);
+        }
+
+        public static double ComputePSI_S(int size)
+        {
+
+            return (size <= 7 ? 0.7 : 1.0);
+        }
+
+        public static double ComputePSI_T(bool status)
+        {
+            return (status ? 1.2 : 1.0);
         }
 
         #region Table 25.4.2.3 equations
