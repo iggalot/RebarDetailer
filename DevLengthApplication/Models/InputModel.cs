@@ -1,81 +1,36 @@
-﻿using System.Collections.Generic;
+﻿using RebarDetailsLibrary;
+using System.Collections.Generic;
 
 namespace DevLengthApplication.Models
 {
-    public class InputModel 
+    public class InputModel
     {
-        private double m_developmentLength = 0;
-        private double m_sideCover = 3;
-        private double m_clearSpacing = 3;
-        private double m_bottomCover = 3;
 
-        private List<string> m_StatusMessageList = null;
+        public BaseDevelopmentLength DevelopmentLengthObject { get; set; }
 
-        public List<string> StatusMessageList
+        public double LD {get; set;}
+
+        public InputModel() : this(DevelopmentLengthTypes.DEV_LENGTH_UNDEFINED)
         {
-            get => m_StatusMessageList;
-            set
-            {
-                m_StatusMessageList = value;
-            }
-        }
-        public int BarSize { get; set; } = 3;
-
-        public double BarDiameter { get; set; }
-        public double SteelYieldStrength { get; set; } = 60000;
-        public double ConcreteCompStrength { get; set; } = 4000;
-
-        public bool EpoxyBarStatus { get; set; } = true;
-        public bool TopBarStatus { get; set; } = true;
-        public bool LightWeightConcreteStatus { get; set; } = false;
-
-        public double PSI_E { get; set; } = 1.0;
-        public double PSI_G { get; set; } = 1.0;
-        public double PSI_T { get; set; } = 1.0;
-        public double PSI_S { get; set; } = 1.0;
-
-        public double SideCover
-        {
-            get => m_sideCover;
-            set
-            {
-                m_sideCover = value;
-            }
         }
 
-        public double BottomCover
+        public InputModel(RebarDetailsLibrary.DevelopmentLengthTypes type)
         {
-            get => m_bottomCover;
-            set
+            switch (type)
             {
-                m_bottomCover = value;
+                case DevelopmentLengthTypes.DEV_LENGTH_UNDEFINED:
+                    DevelopmentLengthObject = new BaseDevelopmentLength();
+                    break;
+                case DevelopmentLengthTypes.DEV_LENGTH_STRAIGHT:
+                    DevelopmentLengthObject = new StraightDevelopmentLength(4, 60000, 3000, false);
+                    break;
+                case DevelopmentLengthTypes.DEV_LENGTH_HOOKED:
+                    break;
+                default:
+                    break;
             }
-        }
 
-        public double CC_Spacing
-        {
-            get => m_clearSpacing;
-            set
-            {
-                m_clearSpacing = value;
-            }
-        }
-        public bool HasMinTransverseReinf { get; set; } = false;
-        public double K_TR { get; set; } = 0;
-
-        public double DevelopmentLengthStraight
-        {
-            get => m_developmentLength;
-            set
-            {
-                m_developmentLength = value;
-            }
-        }
-
-        public InputModel()
-        {
-            // uses the default values
-            DevelopmentLengthStraight = ComputeStraightLength();
+            LD = DevelopmentLengthObject.DevLength();
         }
 
         /// <summary>
@@ -92,50 +47,52 @@ namespace DevLengthApplication.Models
         /// <param name="cc_spacing">smallest center to center spacing between bars</param>
         /// <param name="has_mintransversereinf">will transverse reinforcement be provided</param>
         /// <param name="ktr">ktr calculation, assumed to be zero</param>
-        public InputModel(int size, double yield, double comp, bool epoxy, bool topbar, bool lightweight, double sidecover, double topbotcover, double cc_spacing, bool has_mintransversereinf, double ktr)
+        public InputModel(DevelopmentLengthTypes type, int size, double yield, double comp, bool epoxy, bool topbar, bool lightweight, double sidecover, double topbotcover, double cc_spacing, bool has_mintransversereinf, double ktr)
         {
-            string status_msg;
+            switch (type)
+            {
+                case DevelopmentLengthTypes.DEV_LENGTH_UNDEFINED:
+                    break;
+                case DevelopmentLengthTypes.DEV_LENGTH_STRAIGHT:
+                    DevelopmentLengthObject = new StraightDevelopmentLength(size, yield, comp, false, ktr, has_mintransversereinf, cc_spacing, sidecover, topbotcover, lightweight, epoxy, topbar);
 
-            BarSize = size;
-            BarDiameter = ((double)BarSize) / 8.0;
-
-            SteelYieldStrength = yield;
-            ConcreteCompStrength = comp;
-            EpoxyBarStatus = epoxy;
-            TopBarStatus = topbar;
-            LightWeightConcreteStatus = lightweight;
-
-            SideCover = sidecover;
-            BottomCover = topbotcover;
-            CC_Spacing = cc_spacing;
-            HasMinTransverseReinf = has_mintransversereinf;
-            K_TR = ktr;
-
-            PSI_E = RebarDetailsLibrary.StraightDevelopmentLength.ComputePSI_E(EpoxyBarStatus, BarDiameter, CC_Spacing, SideCover, BottomCover, out status_msg);
-            PSI_T = RebarDetailsLibrary.StraightDevelopmentLength.ComputePSI_T(TopBarStatus, out status_msg);
-            PSI_S = RebarDetailsLibrary.StraightDevelopmentLength.ComputePSI_S(BarSize, out status_msg);
-            PSI_G = RebarDetailsLibrary.StraightDevelopmentLength.ComputePSI_G(SteelYieldStrength, out status_msg);
-
-            DevelopmentLengthStraight = ComputeStraightLength();
+                    //this.ComputeDevelopmentLength();
+                    break;
+                case DevelopmentLengthTypes.DEV_LENGTH_HOOKED:
+                    break;
+                default:
+                    {
+                        break;
+                    }            
+            }
+            LD = DevelopmentLengthObject.DevLength();
         }
 
-        private double ComputeStraightLength()
+        public InputModel(BaseDevelopmentLength obj)
         {
-            List<string> msgList = new List<string>();
-            m_developmentLength = RebarDetailsLibrary.StraightDevelopmentLength.Straight(out msgList, BarSize, SteelYieldStrength, ConcreteCompStrength, false, 0, HasMinTransverseReinf, CC_Spacing, SideCover, BottomCover, LightWeightConcreteStatus, EpoxyBarStatus, TopBarStatus);
-            StatusMessageList = msgList;
-
-            return m_developmentLength;
+            DevelopmentLengthObject = obj;
+            LD = DevelopmentLengthObject.DevLength();
         }
 
-        public string DisplayStraightDevelopmentFactors()
+        public BaseDevelopmentLength ComputeDevelopmentLength()
+        {
+            //if (DevelopmentLengthObject != null)
+            //    return DevelopmentLengthObject.Compute();
+
+            return null;
+
+        }
+
+        public string DisplaytDevelopmentFactors()
         {
             string str = "";
-            for (int i = 0; i < StatusMessageList.Count; i++)
+            if (DevelopmentLengthObject != null)
             {
-                str += StatusMessageList[i] + "\n";
+                if (DevelopmentLengthObject.StatusMessageList == null)
+                    str += "No status messages";
+                else
+                    str += DevelopmentLengthObject.DisplayFactors();
             }
-
             return str;
         }
     }

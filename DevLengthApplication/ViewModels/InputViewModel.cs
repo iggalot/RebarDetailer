@@ -1,4 +1,5 @@
 ﻿using DevLengthApplication.Models;
+using RebarDetailsLibrary;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -16,6 +17,9 @@ namespace DevLengthApplication.ViewModels
         ObservableCollection<int> ocSteelYieldStrength = new ObservableCollection<int> { 40000, 60000, 80000, 100000 };
         ObservableCollection<int> ocConcreteCompStrength = new ObservableCollection<int> { 2000, 2500, 3000, 3500, 4000, 4500, 5000, 5500, 6000, 6500, 7000, 7500, 10000 };
 
+        /// <summary>
+        /// Our development length model basis
+        /// </summary>
         public InputModel Model { get; set; } = new InputModel();
 
         MainWindow MainWin { get; set; }   // reference to this window object
@@ -54,7 +58,10 @@ namespace DevLengthApplication.ViewModels
         {
             get
             {
-                return Model.DevelopmentLengthStraight;
+                if(Model != null)
+                    return Model.LD;
+                else
+                    return -1;
             }
         }
 
@@ -62,7 +69,7 @@ namespace DevLengthApplication.ViewModels
         {
             get
             {
-                return (Model.EpoxyBarStatus);
+                return (Model.DevelopmentLengthObject.EpoxyBarStatus);
             }
         }
 
@@ -70,7 +77,18 @@ namespace DevLengthApplication.ViewModels
         {
             get
             {
-                return (Model.TopBarStatus);
+                switch (Model.DevelopmentLengthObject.DevLengthType)
+                {
+                    case RebarDetailsLibrary.DevelopmentLengthTypes.DEV_LENGTH_UNDEFINED:
+                        break;
+                    case RebarDetailsLibrary.DevelopmentLengthTypes.DEV_LENGTH_STRAIGHT:
+                        return (((StraightDevelopmentLength)Model.DevelopmentLengthObject).TopBarStatus);
+                    case RebarDetailsLibrary.DevelopmentLengthTypes.DEV_LENGTH_HOOKED:
+                        break;
+                    default:
+                        break;
+                }
+                return true;
             }
         }
 
@@ -78,46 +96,82 @@ namespace DevLengthApplication.ViewModels
         {
             get
             {
-                return (Model.DisplayStraightDevelopmentFactors());
+                return (Model.DisplaytDevelopmentFactors());
             }
         }
 
         public double GetSideCover
         {
-            get => Model.SideCover;
+            get
+            {   
+                if(Model != null)
+                    if(Model.DevelopmentLengthObject != null)
+                         return Model.DevelopmentLengthObject.SideCover;
+                return -1;
+            }
             set
             {
-                Model.SideCover = value;
-                OnPropertyChanged("GetSideCover");
+                if (Model != null)
+                    if (Model.DevelopmentLengthObject != null)
+                    {
+                        Model.DevelopmentLengthObject.SideCover = value;
+                        OnPropertyChanged("GetSideCover");
+                    }
+
             }
         }
 
         public double GetBottomCover
         {
-            get => Model.BottomCover;
+            get
+            {
+                if (Model != null)
+                    if (Model.DevelopmentLengthObject != null)
+                        return Model.DevelopmentLengthObject.BottomCover;
+                return -1;
+            }
             set
             {
-                Model.BottomCover = value;
-                OnPropertyChanged("GetBottomCover");
+                if (Model != null)
+                    if (Model.DevelopmentLengthObject != null)
+                    {
+                        Model.DevelopmentLengthObject.BottomCover = value;
+                        OnPropertyChanged("GetBottomCover");
+                    }
             }
         }
 
         public double GetClearSpacing
         {
-            get => Model.CC_Spacing;
+            get
+            {
+                if(Model != null)
+                    if(Model.DevelopmentLengthObject != null)
+                       return Model.DevelopmentLengthObject.CC_Spacing;
+                return -1;
+            }
             set
             {
-                Model.CC_Spacing = value;
-                OnPropertyChanged("GetClearSpacing");
+                if (Model != null)
+                    if (Model.DevelopmentLengthObject != null)
+                    {
+                        Model.DevelopmentLengthObject.CC_Spacing = value;
+                        OnPropertyChanged("GetClearSpacing");
+                    }
             }
         }
 
         /// <summary>
         /// Default constructor
         /// </summary>
+        public InputViewModel(RebarDetailsLibrary.DevelopmentLengthTypes type)
+        {
+            Model = new InputModel(type);
+        }
+
         public InputViewModel()
         {
-            Model = new InputModel();
+            Model = new InputModel(RebarDetailsLibrary.DevelopmentLengthTypes.DEV_LENGTH_UNDEFINED);
         }
 
         /// <summary>
@@ -258,7 +312,7 @@ namespace DevLengthApplication.ViewModels
             bool hasmintransstatus = (MainWin.cmbLightweightConcrete.SelectedIndex == 0 ? true : false);
 
             // Create the model
-            Model = new InputModel(barSize, steelYieldStrength, concreteCompStrength, epoxyStatus, topBarStatus, lightweightStatus, sidecover, bottomcover, clearspacing, hasmintransstatus, 0);
+            Model = new InputModel(RebarDetailsLibrary.DevelopmentLengthTypes.DEV_LENGTH_STRAIGHT, barSize, steelYieldStrength, concreteCompStrength, epoxyStatus, topBarStatus, lightweightStatus, sidecover, bottomcover, clearspacing, hasmintransstatus, 0);
 
             OnPropertyChanged("GetSelectedBarSizeLabel");
             OnPropertyChanged("GetSelectedSteelYieldStrengthLabel");

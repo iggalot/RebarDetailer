@@ -6,103 +6,105 @@ using System.Threading.Tasks;
 
 namespace RebarDetailsLibrary
 {
-    public static class StraightDevelopmentLength
+    public class StraightDevelopmentLength : BaseDevelopmentLength
     {
-        const bool REBAR_DEBUG_MODE = true;
-        public static List<string> StatusMessageList { get; set; }
+        public bool TopBarStatus { get; set; } = true;
+        public bool HasMinTransverseReinf { get; set; } = false;
+        public double K_TR { get; set; } = 0;
+        public double DevelopmentLengthStraight { get; set; } = 0;
+        public bool TransReinfProvided { get; set; } = false;
 
-        public static double Straight(
-            out List<string> msgList,
+
+        public double PSI_E { get; set; }
+        public double PSI_G { get; set; }
+        public double PSI_T { get; set; }
+        public double PSI_S { get; set; }
+
+
+        public StraightDevelopmentLength(
             int bar_size,
             double steel_strength,
             double concrete_strength,
-            bool DEBUG_MODE = !REBAR_DEBUG_MODE,
-            double Ktr = 0,
-            bool trans_reinf_provided = false,
+            bool DEBUG_MODE,
+            double ktr = 0,
+            bool tr_provided = false,
             double adj_cc_spacing = 3,
             double side_cover = 3,
             double bottom_cover = 3,
             bool lightweight = false,
             bool epoxy_coated = true,
             bool top_bar_position = true
-            )
+            ) : base(
+                DevelopmentLengthTypes.DEV_LENGTH_STRAIGHT,
+                bar_size,
+                steel_strength,
+                concrete_strength,
+                DEBUG_MODE,
+                adj_cc_spacing,
+                side_cover,
+                bottom_cover,
+                lightweight ,
+                epoxy_coated)
+        {
+
+            if (ktr < 0)
+                throw new InvalidOperationException("ERROR: Ktr cannot be less than zero - Ktr=" + ktr.ToString());
+
+            K_TR = ktr;
+            HasMinTransverseReinf = tr_provided;
+            TopBarStatus = top_bar_position;
+        }
+
+        public double Straight()
         {
             string status_msg = "";
-            double devLength = 0;
-            double psi_e, psi_s, psi_t, psi_g, lambda, psi_c, psi_o;
             double psi_e_x_psi_t_product;
-            double steel_yield_str, concrete_comp_str;
             bool spacing_and_cover_reqs_okay = false;
 
-            StatusMessageList = new List<string>();
+//            StatusMessageList = new List<string>();
 
-            if (bar_size < 3 || bar_size > 11)
-                throw new InvalidOperationException("ERROR: Bar size must be between #3 and #11 - barSize #" + bar_size.ToString());
-
-            if (steel_strength <= 0 || concrete_strength <= 0)
-                throw new InvalidOperationException("ERROR: Material Strength is invalid - fy=" + steel_strength.ToString() + " f'c=" + concrete_strength);
-
-            if (Ktr < 0)
-                throw new InvalidOperationException("ERROR: Ktr cannot be less than zero - Ktr=" + Ktr.ToString());
-
-            if (adj_cc_spacing < 0 || side_cover < 0 || bottom_cover < 0)
-            {
-                throw new InvalidOperationException("ERROR: Cover and spacing reqs must be positive = CC_spacing=" + adj_cc_spacing.ToString() + " : side_cover=" + side_cover.ToString() + " : top/bottom cover=" + bottom_cover.ToString());
-            }
-
-            double bar_dia = bar_size / 8.0;
-            StatusMessageList.Add("Bar Size = " + bar_size + " -- dia. = " + bar_dia);
-
-            steel_yield_str = steel_strength;
-            concrete_comp_str = concrete_strength;
-            StatusMessageList.Add("fy = " + steel_yield_str + "      f'c = " + concrete_comp_str);
-
-            lambda = lightweight ? 0.75 : 1.0;
-            StatusMessageList.Add("lambda = " + lambda.ToString() + " -- " + (lightweight ? "" : " NOT ") + "lightweight concrete");
-
-            psi_e = ComputePSI_E(epoxy_coated, bar_dia, adj_cc_spacing, side_cover, bottom_cover,  out status_msg);
+            PSI_E = ComputePSI_E(EpoxyBarStatus, BarDiameter, CC_Spacing, SideCover, BottomCover,  out status_msg);
             StatusMessageList.Add(status_msg);
 
-            psi_s = ComputePSI_S(bar_size, out status_msg);
+            PSI_S = ComputePSI_S(BarSize, out status_msg);
             StatusMessageList.Add(status_msg);
 
-            psi_t = ComputePSI_T(top_bar_position, out status_msg);
+            PSI_T = ComputePSI_T(TopBarStatus, out status_msg);
             StatusMessageList.Add(status_msg);
 
-            psi_g = ComputePSI_G(steel_yield_str, out status_msg);
+            PSI_G = ComputePSI_G(SteelYieldStrength, out status_msg);
             StatusMessageList.Add(status_msg);
-
 
             // Apply the limit from ACI318-19 Table 25.4.2.5 for product of psi_e and psi_t greater than 1.7
-            psi_e_x_psi_t_product = ComputePSI_E_x_Psi_T_Product(psi_e, psi_t, out status_msg);
+            psi_e_x_psi_t_product = ComputePSI_E_x_Psi_T_Product(PSI_E, PSI_T, out status_msg);
             StatusMessageList.Add(status_msg);
 
             // Compute cb from lesser of half of clear cc spacing or side or bottom covers
-            double cb = ComputeCb(adj_cc_spacing, side_cover, bottom_cover, out status_msg);
+            double cb = ComputeCb(CC_Spacing, SideCover, BottomCover, out status_msg);
             StatusMessageList.Add(status_msg);
 
             // Compute the (cb + Ktr) / db factor and apply limit of 2.5 from ACI318-19 25.4.2.4 
-            double cb_plus_Ktr_factor = ComputeCb_Plus_Ktr(cb, Ktr, bar_dia, out status_msg);
+            double cb_plus_Ktr_factor = ComputeCb_Plus_Ktr(cb, K_TR, BarDiameter, out status_msg);
             StatusMessageList.Add(status_msg);
 
             // Checks for ACI318-19 Table 25.4.2.3
-
-            spacing_and_cover_reqs_okay = CheckSpacingAndCoverReqs(bar_dia, adj_cc_spacing, side_cover, bottom_cover, trans_reinf_provided, out status_msg);
+            spacing_and_cover_reqs_okay = CheckSpacingAndCoverReqs(BarDiameter, CC_Spacing, SideCover, BottomCover, TransReinfProvided, out status_msg);
             StatusMessageList.Add(status_msg);
 
             // Determine which equation from Table 25.4.2.3 to use for straight development length
             string devLengthEqString = "";
-            if (bar_size <= 6)
+            double devLength;
+            if (BarSize <= 6)
             {
                 devLengthEqString += "Bar size 6 and smaller";
                 if (spacing_and_cover_reqs_okay)
                 {
                     devLengthEqString += " & spacing reqs are okay (ACI318-19 Table 24.4.2.3).";
-                    devLength = SmallBarDevLength_SpacingReqsOkay(bar_dia, steel_yield_str, concrete_comp_str, psi_e_x_psi_t_product, psi_g, lambda, DEBUG_MODE);
+                    devLength = SmallBarDevLength_SpacingReqsOkay(BarDiameter, SteelYieldStrength, ConcreteCompStrength, psi_e_x_psi_t_product, PSI_G, Lambda, DEBUG_MODE);
                 } else
                 {
                     devLengthEqString += " & spacing reqs exceed limits (ACI318-19 Table 24.4.2.3)";
-                    devLength = SmallBarDevLength_SpacingReqsInvalid(bar_dia, steel_yield_str, concrete_comp_str, psi_e_x_psi_t_product, psi_g, lambda, DEBUG_MODE);
+                    devLength = SmallBarDevLength_SpacingReqsInvalid(BarDiameter, SteelYieldStrength, ConcreteCompStrength, psi_e_x_psi_t_product, PSI_G, Lambda, DEBUG_MODE);
                 }
             }
             else
@@ -111,41 +113,41 @@ namespace RebarDetailsLibrary
                 if (spacing_and_cover_reqs_okay)
                 {
                     devLengthEqString += " & spacing reqs are okay (ACI318-19 Table 24.4.2.3).";
-                    devLength = LargeBarDevLength_SpacingReqsOkay(bar_dia, steel_yield_str, concrete_comp_str, psi_e_x_psi_t_product, psi_g, lambda, DEBUG_MODE);
+                    devLength = LargeBarDevLength_SpacingReqsOkay(BarDiameter, SteelYieldStrength, ConcreteCompStrength, psi_e_x_psi_t_product, PSI_G, Lambda, DEBUG_MODE);
                 }
                 else
                 {
                     devLengthEqString += " & spacing reqs exceed limits (ACI318-19 Table 24.4.2.3)";
-                    devLength = LargeBarDevLength_SpacingReqsInvalid(bar_dia, steel_yield_str, concrete_comp_str, psi_e_x_psi_t_product, psi_g, lambda, DEBUG_MODE);
+                    devLength = LargeBarDevLength_SpacingReqsInvalid(BarDiameter, SteelYieldStrength, ConcreteCompStrength, psi_e_x_psi_t_product, PSI_G, Lambda, DEBUG_MODE);
                 }
             }
             StatusMessageList.Add(devLengthEqString);
 
             // Tension development length per ACI318-19 Eqn. 25.4.2.4a
-            double devLength_allfactors = ((3 * steel_yield_str * psi_s * psi_g * psi_e_x_psi_t_product) / (40.0 * lambda * Math.Sqrt(concrete_comp_str) * cb_plus_Ktr_factor)) * bar_dia;
+            double devLength_allfactors = (3 * SteelYieldStrength * PSI_S * PSI_G * psi_e_x_psi_t_product / (40.0 * Lambda * Math.Sqrt(ConcreteCompStrength) * cb_plus_Ktr_factor)) * BarDiameter;
 
             if (DEBUG_MODE)
             {
-                Console.WriteLine("   Analyzing a #" + bar_size.ToString() + " straight bar with fy=" + steel_yield_str.ToString() + " psi amd f'c=" + concrete_comp_str.ToString() + "psi");
+                Console.WriteLine("   Analyzing a #" + BarSize.ToString() + " straight bar with fy=" + SteelYieldStrength.ToString() + " psi amd f'c=" + ConcreteCompStrength.ToString() + "psi");
                 Console.WriteLine("   MATS: fy      f'c    lambda");
-                Console.WriteLine("         " + steel_yield_str.ToString() + " : " + concrete_comp_str.ToString() + " : " + lambda.ToString());
-                Console.WriteLine("   Epoxy coated: " + epoxy_coated.ToString() + " : Top bars: " + top_bar_position.ToString());
+                Console.WriteLine("         " + SteelYieldStrength.ToString() + " : " + ConcreteCompStrength.ToString() + " : " + Lambda.ToString());
+                Console.WriteLine("   Epoxy coated: " + EpoxyBarStatus.ToString() + " : Top bars: " + TopBarStatus.ToString());
 
                 string str = "   PSI  E     S     T     G";
 
-                if ((psi_e * psi_t > 1.7))
+                if ((PSI_E * PSI_T > 1.7))
                     str += " -- Table 25.4.2.5 limit of 1.7 triggered";
                 Console.WriteLine(str);
-                Console.WriteLine("        " + psi_e.ToString() + " : " + psi_s.ToString() + " : " + psi_t.ToString() + " : " + psi_g.ToString());
+                Console.WriteLine("        " + PSI_E.ToString() + " : " + PSI_S.ToString() + " : " + PSI_T.ToString() + " : " + PSI_G.ToString());
 
-                if (Ktr == 0)
+                if (K_TR == 0)
                     Console.WriteLine("   Conservative Ktr=0 used.");
 
                 str += cb_plus_Ktr_factor.ToString();
-                if ((cb + Ktr) / bar_dia >= 2.5)
-                    str += ((cb + Ktr) / bar_dia).ToString() + " - but LIMIT TRIGGERED -- 2.5 used";
+                if ((cb + K_TR) / BarDiameter >= 2.5)
+                    str += ((cb + K_TR) / BarDiameter).ToString() + " - but LIMIT TRIGGERED -- 2.5 used";
 
-                Console.WriteLine("   Clear spacing= " + adj_cc_spacing.ToString() + " : side_cover= " + side_cover.ToString() + " : top_cover=" + bottom_cover.ToString());
+                Console.WriteLine("   Clear spacing= " + CC_Spacing.ToString() + " : side_cover= " + SideCover.ToString() + " : top_cover=" + BottomCover.ToString());
                 Console.WriteLine("   cb=" + cb.ToString() + " :   (Cb + Ktr) / db = " + str);
 
                 Console.WriteLine(devLengthEqString);
@@ -155,9 +157,6 @@ namespace RebarDetailsLibrary
 
             StatusMessageList.Add("Table 25.4.2.3 Simplified Eqns for LD = " + devLength.ToString());
             StatusMessageList.Add("ACI318-19 Eqn 25.4.2.4a for LD=" + devLength_allfactors.ToString());
-
-            // return our messages to the calling function via the "out" variable
-            msgList = StatusMessageList;
 
             // Round up the result and choose the smaller of the two computations
             return Math.Min(Math.Ceiling(devLength),Math.Ceiling(devLength_allfactors));
@@ -339,5 +338,28 @@ namespace RebarDetailsLibrary
             return Math.Max(12, (3.0 * fy * psi_e_x_psi_t_product * psi_g) / (40.0 * lambda * Math.Sqrt(fc)) * dia);
         }
         #endregion
+
+        public override BaseDevelopmentLength Compute()
+        {
+            return null;
+ //           return this.Straight();
+ //           var sdl = new StraightDevelopmentLength(BarSize, SteelYieldStrength, ConcreteCompStrength, false, K_TR, HasMinTransverseReinf, CC_Spacing, SideCover, BottomCover, LightWeightConcreteStatus, EpoxyBarStatus, TopBarStatus);
+//return sdl;
+        }
+
+        public override string DisplayFactors()
+        {
+            string str = "";
+            foreach (var msg in StatusMessageList)
+                str += msg + "\n";
+            str += "In straight display";
+            return str;
+        }
+
+        public override double DevLength()
+        {
+            double val = Straight();
+            return val;
+        }
     }
 }
