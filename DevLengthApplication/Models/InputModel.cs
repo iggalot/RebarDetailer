@@ -111,10 +111,10 @@ namespace DevLengthApplication.Models
             HasMinTransverseReinf = has_mintransversereinf;
             K_TR = ktr;
 
-            PSI_E = RebarDetailsLibrary.DevelopmentLength.ComputePSI_E(EpoxyBarStatus, out status_msg);
-            PSI_T = RebarDetailsLibrary.DevelopmentLength.ComputePSI_T(TopBarStatus, out status_msg);
-            PSI_S = RebarDetailsLibrary.DevelopmentLength.ComputePSI_S(BarSize, out status_msg);
-            PSI_G = RebarDetailsLibrary.DevelopmentLength.ComputePSI_G(SteelYieldStrength, out status_msg);
+            PSI_E = RebarDetailsLibrary.StraightDevelopmentLength.ComputePSI_E(EpoxyBarStatus, BarDiameter, CC_Spacing, SideCover, BottomCover, out status_msg);
+            PSI_T = RebarDetailsLibrary.StraightDevelopmentLength.ComputePSI_T(TopBarStatus, out status_msg);
+            PSI_S = RebarDetailsLibrary.StraightDevelopmentLength.ComputePSI_S(BarSize, out status_msg);
+            PSI_G = RebarDetailsLibrary.StraightDevelopmentLength.ComputePSI_G(SteelYieldStrength, out status_msg);
 
             DevelopmentLengthStraight = ComputeStraightLength();
         }
@@ -122,7 +122,7 @@ namespace DevLengthApplication.Models
         private double ComputeStraightLength()
         {
             List<string> msgList = new List<string>();
-            m_developmentLength = RebarDetailsLibrary.DevelopmentLength.Straight(out msgList, BarSize, SteelYieldStrength, ConcreteCompStrength, false, 0, HasMinTransverseReinf, CC_Spacing, SideCover, BottomCover, LightWeightConcreteStatus, EpoxyBarStatus, TopBarStatus);
+            m_developmentLength = RebarDetailsLibrary.StraightDevelopmentLength.Straight(out msgList, BarSize, SteelYieldStrength, ConcreteCompStrength, false, 0, HasMinTransverseReinf, CC_Spacing, SideCover, BottomCover, LightWeightConcreteStatus, EpoxyBarStatus, TopBarStatus);
             StatusMessageList = msgList;
 
             return m_developmentLength;

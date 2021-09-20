@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace RebarDetailsLibrary
 {
-    public static class DevelopmentLength
+    public static class StraightDevelopmentLength
     {
         const bool REBAR_DEBUG_MODE = true;
         public static List<string> StatusMessageList { get; set; }
@@ -21,7 +21,7 @@ namespace RebarDetailsLibrary
             bool trans_reinf_provided = false,
             double adj_cc_spacing = 3,
             double side_cover = 3,
-            double top_cover = 3,
+            double bottom_cover = 3,
             bool lightweight = false,
             bool epoxy_coated = true,
             bool top_bar_position = true
@@ -45,9 +45,9 @@ namespace RebarDetailsLibrary
             if (Ktr < 0)
                 throw new InvalidOperationException("ERROR: Ktr cannot be less than zero - Ktr=" + Ktr.ToString());
 
-            if (adj_cc_spacing < 0 || side_cover < 0 || top_cover < 0)
+            if (adj_cc_spacing < 0 || side_cover < 0 || bottom_cover < 0)
             {
-                throw new InvalidOperationException("ERROR: Cover and spacing reqs must be positive = CC_spacing=" + adj_cc_spacing.ToString() + " : side_cover=" + side_cover.ToString() + " : top/bottom cover=" + top_cover.ToString());
+                throw new InvalidOperationException("ERROR: Cover and spacing reqs must be positive = CC_spacing=" + adj_cc_spacing.ToString() + " : side_cover=" + side_cover.ToString() + " : top/bottom cover=" + bottom_cover.ToString());
             }
 
             double bar_dia = bar_size / 8.0;
@@ -60,7 +60,7 @@ namespace RebarDetailsLibrary
             lambda = lightweight ? 0.75 : 1.0;
             StatusMessageList.Add("lambda = " + lambda.ToString() + " -- " + (lightweight ? "" : " NOT ") + "lightweight concrete");
 
-            psi_e = ComputePSI_E(epoxy_coated, out status_msg);
+            psi_e = ComputePSI_E(epoxy_coated, bar_dia, adj_cc_spacing, side_cover, bottom_cover,  out status_msg);
             StatusMessageList.Add(status_msg);
 
             psi_s = ComputePSI_S(bar_size, out status_msg);
@@ -78,7 +78,7 @@ namespace RebarDetailsLibrary
             StatusMessageList.Add(status_msg);
 
             // Compute cb from lesser of half of clear cc spacing or side or bottom covers
-            double cb = ComputeCb(adj_cc_spacing, side_cover, top_cover, out status_msg);
+            double cb = ComputeCb(adj_cc_spacing, side_cover, bottom_cover, out status_msg);
             StatusMessageList.Add(status_msg);
 
             // Compute the (cb + Ktr) / db factor and apply limit of 2.5 from ACI318-19 25.4.2.4 
@@ -87,7 +87,7 @@ namespace RebarDetailsLibrary
 
             // Checks for ACI318-19 Table 25.4.2.3
 
-            spacing_and_cover_reqs_okay = CheckSpacingAndCoverReqs(bar_dia, adj_cc_spacing, side_cover, top_cover, trans_reinf_provided, out status_msg);
+            spacing_and_cover_reqs_okay = CheckSpacingAndCoverReqs(bar_dia, adj_cc_spacing, side_cover, bottom_cover, trans_reinf_provided, out status_msg);
             StatusMessageList.Add(status_msg);
 
             // Determine which equation from Table 25.4.2.3 to use for straight development length
@@ -145,7 +145,7 @@ namespace RebarDetailsLibrary
                 if ((cb + Ktr) / bar_dia >= 2.5)
                     str += ((cb + Ktr) / bar_dia).ToString() + " - but LIMIT TRIGGERED -- 2.5 used";
 
-                Console.WriteLine("   Clear spacing= " + adj_cc_spacing.ToString() + " : side_cover= " + side_cover.ToString() + " : top_cover=" + top_cover.ToString());
+                Console.WriteLine("   Clear spacing= " + adj_cc_spacing.ToString() + " : side_cover= " + side_cover.ToString() + " : top_cover=" + bottom_cover.ToString());
                 Console.WriteLine("   cb=" + cb.ToString() + " :   (Cb + Ktr) / db = " + str);
 
                 Console.WriteLine(devLengthEqString);
@@ -163,16 +163,27 @@ namespace RebarDetailsLibrary
             return Math.Min(Math.Ceiling(devLength),Math.Ceiling(devLength_allfactors));
         }
 
-        public static double ComputePSI_E(bool status, out string msg)
+        public static double ComputePSI_E(bool status, double bar_dia, double clear_spacing, double side_cover, double bottom_cover, out string msg)
         {
+            double smallestCover = Math.Min(side_cover, bottom_cover);
+
             if (status)
             {
-                msg = "PSI_E = 1.3 per ACI318-19 Table 25.4.2.5";
-                return 1.3;
+                // clear spacing less than 6 * db or clear cover less than 3 * db
+                if ((smallestCover < 6 * bar_dia) || (clear_spacing < 3 * bar_dia))
+                {
+                    
+                    msg = "PSI_E = 1.5 per ACI318-19 Table 25.4.2.5\nEpoxy coated and cover less than 3db or clear spacing less than 6db";
+                    return 1.5;
+                } else
+                {
+                    msg = "PSI_E = 1.2 per ACI318-19 Table 25.4.2.5\nEpoxy coated with no cover or spacing issues";
+                    return 1.2;
+                }
             }
             else
             {
-                msg = "PSI_E = 1.0 per ACI318-19 Table 25.4.2.5";
+                msg = "PSI_E = 1.0 per ACI318-19 Table 25.4.2.5\nNon-epoxy coated";
                 return 1.0;
             }
         }
