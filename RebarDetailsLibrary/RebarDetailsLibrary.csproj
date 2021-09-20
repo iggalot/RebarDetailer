@@ -42,6 +42,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BaseDevelopmentLength.cs" />
+    <Compile Include="HookDevelopmentLength.cs" />
     <Compile Include="StraightDevelopmentLength.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

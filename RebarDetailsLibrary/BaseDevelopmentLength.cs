@@ -47,8 +47,6 @@ namespace RebarDetailsLibrary
 
         public int bar_size;
         public double bar_dia;
-        public double steel_yield_str;
-        public double concrete_comp_str;
         public double lambda;
 
         public BaseDevelopmentLength()
@@ -88,7 +86,7 @@ namespace RebarDetailsLibrary
                 throw new InvalidOperationException("ERROR: Invalid bar size - barSize #" + BarSize.ToString());
 
             if (fy <= 0 || fc <= 0)
-                throw new InvalidOperationException("ERROR: Material Strength is invalid - fy=" + steel_yield_str.ToString() + " f'c=" + concrete_comp_str);
+                throw new InvalidOperationException("ERROR: Material Strength is invalid - fy=" + SteelYieldStrength.ToString() + " f'c=" + ConcreteCompStrength);
 
 
             if (cc_spacing < 0 || side < 0 || bottom< 0)
@@ -100,7 +98,7 @@ namespace RebarDetailsLibrary
 
             SteelYieldStrength = fy;
             ConcreteCompStrength = fc;
-            StatusMessageList.Add("fy = " + steel_yield_str + "      f'c = " + concrete_comp_str);
+            StatusMessageList.Add("fy = " + SteelYieldStrength + "      f'c = " + ConcreteCompStrength);
 
             CC_Spacing = cc_spacing;
             SideCover = side;
