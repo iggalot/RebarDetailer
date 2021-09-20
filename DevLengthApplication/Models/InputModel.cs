@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
 namespace DevLengthApplication.Models
 {
@@ -37,8 +33,6 @@ namespace DevLengthApplication.Models
         public double PSI_G { get; set; } = 1.0;
         public double PSI_T { get; set; } = 1.0;
         public double PSI_S { get; set; } = 1.0;
-
-
 
         public double SideCover
         {
@@ -84,6 +78,20 @@ namespace DevLengthApplication.Models
             DevelopmentLengthStraight = ComputeStraightLength();
         }
 
+        /// <summary>
+        /// Constructor for the model.  Computes development length for the loaded parameters.
+        /// </summary>
+        /// <param name="size">rebar size number</param>
+        /// <param name="yield">steel yield stress, psi</param>
+        /// <param name="comp">concrete compressive stress, psi</param>
+        /// <param name="epoxy">is the bar epoxy coated</param>
+        /// <param name="topbar">does the bar have more than 12 inches of fresh concrete below it?</param>
+        /// <param name="lightweight">is the concrete lightweight?</param>
+        /// <param name="sidecover">sidecover distance</param>
+        /// <param name="topbotcover">top / bottom cover distance</param>
+        /// <param name="cc_spacing">smallest center to center spacing between bars</param>
+        /// <param name="has_mintransversereinf">will transverse reinforcement be provided</param>
+        /// <param name="ktr">ktr calculation, assumed to be zero</param>
         public InputModel(int size, double yield, double comp, bool epoxy, bool topbar, bool lightweight, double sidecover, double topbotcover, double cc_spacing, bool has_mintransversereinf, double ktr)
         {
             string status_msg;
@@ -97,7 +105,6 @@ namespace DevLengthApplication.Models
             TopBarStatus = topbar;
             LightWeightConcreteStatus = lightweight;
 
-            // TODO: Error check these values.
             SideCover = sidecover;
             BottomCover = topbotcover;
             CC_Spacing = cc_spacing;
@@ -128,24 +135,6 @@ namespace DevLengthApplication.Models
             {
                 str += StatusMessageList[i] + "\n";
             }
-
-            
-
-            //str += ("Analyzing a #" + BarSize.ToString() + " straight bar\n");
-            //str += ("fy=" + SteelYieldStrength.ToString() + " psi\n");
-            //str += ("f'c=" + ConcreteCompStrength.ToString() + "psi\n");
-            //str += ("Epoxy coated? " + EpoxyBarStatus.ToString() + "\n");
-            //str += ("Top bars? " + TopBarStatus.ToString() + "\n");
-            //str += ("Lightweight Concrete? " + LightWeightConcreteStatus.ToString() + "\n");
-            //str += ("PSI_E: " + PSI_E + "\n");
-            //str += ("PSI_S: " + PSI_S + "\n");
-            //str += ("PSI_G: " + PSI_G + "\n");
-            //str += ("PSI_T: " + PSI_T + "\n");
-            //str += ("Side Cover: " + SideCover + "\n");
-            //str += ("Top/Bot Cover: " + BottomCover + "\n");
-            //str += ("Adj Center Spacing: " + CC_Spacing + "\n");
-            //str += ("HasMinTransverse: " + HasMinTransverseReinf + "\n");
-
 
             return str;
         }

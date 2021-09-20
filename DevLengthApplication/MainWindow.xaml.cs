@@ -1,20 +1,7 @@
 ﻿using DevLengthApplication.ViewModels;
-using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace DevLengthApplication
 {
@@ -24,8 +11,7 @@ namespace DevLengthApplication
     public partial class MainWindow : Window
     {
         private InputViewModel InputVM { get; set; }
-
-        public bool firstLaunched = true;
+        public bool bWindowFinishedLoading = false;
 
         public MainWindow()
         {
@@ -36,43 +22,106 @@ namespace DevLengthApplication
             OnUserCreate();
 
             DataContext = InputVM;
-
-            firstLaunched = false; // tells us our initial setup is correct
         }
 
+        /// <summary>
+        /// Function that first only once when the application is created.
+        /// </summary>
         private void OnUserCreate()
         {
             InputVM.Create(this);
         }
 
-
-        private void cmbSelectionChanged(object sender, SelectionChangedEventArgs e)
+        /// <summary>
+        /// Event for when the window finishes loading.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnWindowLoaded(object sender, RoutedEventArgs e)
         {
-            if (!firstLaunched)
-            {
-                InputVM.Update();
-                return;
-            }
-
-
+            bWindowFinishedLoading = true;
+            InputVM.Update(); // run the calculations for the current data set
         }
 
-        private void TextBox_TextChanged(object sender, TextChangedEventArgs e)
+        /// <summary>
+        /// Event that triggers when a combo box selection has changed.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void cmbSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            //if (!firstLaunched)
-            //{
-            //    {
-            //        InputVM.Update();
-            //        return;
-            //    }
-            //}
-            //if(!firstLaunched)
-            //{
-            //    var binding = ((TextBox)sender).GetBindingExpression(TextBox.TextProperty);
-            //    binding.UpdateSource();
-            //    //InputVM.Update();
-            //}
+            if (bWindowFinishedLoading)
+            {
+                InputVM.Update();
+                ShowACIDetails();
+                return;
+            }
+        }
 
+        /// <summary>
+        /// Event that triggers when the text boxes lose focus.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void TextBoxLostFocus(object sender, RoutedEventArgs e)
+        {
+            if (bWindowFinishedLoading)
+            {
+                InputVM.Update();
+                ShowACIDetails();
+            }
+        }
+
+        /// <summary>
+        /// Event handler for key presses in the main GUI window.
+        /// </summary>
+        /// <param name="sener"></param>
+        /// <param name="e"></param>
+        private void OnKeyDownHandler(object sener, KeyEventArgs e)
+        {
+
+            if(e.Key == Key.Return)
+            {
+                InputVM.Update();
+                ShowACIDetails();
+            }
+
+            if(e.Key == Key.Tab)
+            {
+                InputVM.Update();
+                ShowACIDetails();
+            }
+        }
+
+        /// <summary>
+        /// Toggles the ACI details button.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void ACIDetailsButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (svDisplayFactors.Visibility == Visibility.Visible)
+            {
+                CollapseACIDetails();
+            }
+            else
+            {
+                ShowACIDetails();
+            }
+        }
+
+        protected void CollapseACIDetails()
+        {
+            btnShownACIDetailsExpandedView.Visibility = Visibility.Collapsed;
+            btnShownACIDetailsCollapsedView.Visibility = Visibility.Visible;
+            svDisplayFactors.Visibility = Visibility.Collapsed;
+        }
+
+        protected void ShowACIDetails()
+        {
+            btnShownACIDetailsExpandedView.Visibility = Visibility.Visible;
+            btnShownACIDetailsCollapsedView.Visibility = Visibility.Collapsed;
+            svDisplayFactors.Visibility = Visibility.Visible;
         }
     }
 }

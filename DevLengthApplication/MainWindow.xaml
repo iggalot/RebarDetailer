@@ -5,7 +5,8 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:DevLengthApplication"
         mc:Ignorable="d"
-        Title="Development Length Calculator v1.0" Width="1050" Height="500">
+        Title="Development Length Calculator v1.0" Width="1050" Height="500"
+        Loaded="OnWindowLoaded">
     <Border Background="Teal" Margin="10" Padding="25">
         <Grid VerticalAlignment="Center">
             <Grid.ColumnDefinitions>
@@ -47,6 +48,7 @@
             <ComboBox Grid.Row="6" Grid.Column="1" Name="cmbLightweightConcrete" Width="75" Height="20" SelectionChanged="cmbSelectionChanged"/>
 
             <Canvas Grid.RowSpan ="6" Grid.Column="2" x:Name="MainCanvas" Width="400" Height="260" Background="LightGray"/>
+            <Button Name="btnShownACIDetailsCollapsedView" Grid.Row="0" Grid.Column="2"  Content="Show ACI Details" Click="ACIDetailsButton_Click"/>
 
             <!--<StackPanel Grid.Row="7" Grid.ColumnSpan="3" Orientation="Horizontal" HorizontalAlignment="Center">
                 <TextBlock Name="tbBarSize" Text= "{Binding GetSelectedBarSizeLabel}" Width="75" Height="30" Background="red"/>
@@ -56,20 +58,25 @@
 
             <StackPanel Grid.Row="7"  Grid.Column="0" Grid.ColumnSpan="3" Orientation="Horizontal">
                 <Label Content="Clear Spacing"/>
-                <TextBox Name="tbClearSpacing" Text="{Binding GetClearSpacing}" Width="75" Height="20" TextChanged="TextBox_TextChanged"/>
+                <TextBox Name="tbClearSpacing" Text="{Binding GetClearSpacing}" Width="75" Height="20" KeyDown="OnKeyDownHandler" LostFocus="TextBoxLostFocus"/>
                 <Label Content="Side Cover"/>
-                <TextBox Name="tbSideCover" Text="{Binding GetSideCover}" Width="75" Height="20" TextChanged="TextBox_TextChanged"/>
+                <TextBox Name="tbSideCover" Text="{Binding GetSideCover}" Width="75" Height="20" KeyDown="OnKeyDownHandler" LostFocus="TextBoxLostFocus"/>
             </StackPanel>
             <StackPanel Grid.Row="8"  Grid.Column="0" Grid.ColumnSpan="3" Orientation="Horizontal">
                 <Label Content="Top/Bottom Cover"/>
-                <TextBox Name="tbBottomCover" Text="{Binding GetBottomCover}" Width="75" Height="20" TextChanged="TextBox_TextChanged"/>
+                <TextBox Name="tbBottomCover" Text="{Binding GetBottomCover}" Width="75" Height="20" KeyDown="OnKeyDownHandler" LostFocus="TextBoxLostFocus"/>
                 <Label Content="Min Transverse Reinf"/>
                 <ComboBox Name="cmbHasMinTransverseReinf" Width="75" Height="20" SelectionChanged="cmbSelectionChanged"/>
             </StackPanel>
 
-            <ScrollViewer Grid.Row="0" Grid.RowSpan="6" Grid.Column="4" Width="400" Height="375">
-                <TextBlock Name="tbFactors" Text="{Binding DisplayFactors}"  Background="White"/>
-            </ScrollViewer>
+            
+            <StackPanel Grid.Row="0" Grid.RowSpan="7" Grid.Column="4" Name="spDisplayFactors" Orientation="Vertical">
+                <Button Visibility="Collapsed" Name="btnShownACIDetailsExpandedView" Content="Collapse ACI Details" Click="ACIDetailsButton_Click"/>
+                <ScrollViewer Name="svDisplayFactors" Visibility="Collapsed" VerticalScrollBarVisibility="Auto" Width="400" Height="500">
+                    <TextBlock Name="tbFactors" Text="{Binding GetDisplayFactors}"  Background="White"/>
+                </ScrollViewer>
+            </StackPanel>
+
         </Grid>
     </Border>
 </Window>

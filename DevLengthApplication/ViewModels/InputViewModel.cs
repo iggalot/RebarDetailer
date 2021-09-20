@@ -10,7 +10,6 @@ using System.Windows.Controls;
 
 namespace DevLengthApplication.ViewModels
 {
-
     public class InputViewModel : BaseViewModel
     {
         ObservableCollection<int> ocBarSize = new ObservableCollection<int> { 3, 4, 5, 6, 7, 8, 9, 10, 11, 14, 18 };
@@ -59,8 +58,6 @@ namespace DevLengthApplication.ViewModels
             }
         }
 
-
-
         public bool GetEpoxyBarStatus
         {
             get
@@ -77,7 +74,7 @@ namespace DevLengthApplication.ViewModels
             }
         }
 
-        public string DisplayFactors
+        public string GetDisplayFactors
         {
             get
             {
@@ -124,7 +121,7 @@ namespace DevLengthApplication.ViewModels
         }
 
         /// <summary>
-        /// Setus up the view model for this window
+        /// Setup the view model for this window
         /// </summary>
         /// <param name="window"></param>
         public void Create(MainWindow window)
@@ -193,6 +190,9 @@ namespace DevLengthApplication.ViewModels
             window.cmbHasMinTransverseReinf.SelectedItem = window.cmbHasMinTransverseReinf.Items[1];
         }
 
+        /// <summary>
+        /// Read the form data, parse it, and create a new model for the data.
+        /// </summary>
         public void Update()
         {
             bool modelIsValid = true;
@@ -223,17 +223,39 @@ namespace DevLengthApplication.ViewModels
 
             double sidecover, bottomcover, clearspacing;
 
+            bool bValidInput = true;
+            string parseMessage = "";
             if (!Double.TryParse(MainWin.tbSideCover.Text, out sidecover))
-                throw new InvalidOperationException("Side Cover must be a double");
+            {
+                bValidInput = false;
+                parseMessage += "Side Cover must be a valid double\n";
+            }
 
             if (!Double.TryParse(MainWin.tbBottomCover.Text, out bottomcover))
-                throw new InvalidOperationException("Bottom Cover must be a double");
+            {
+                bValidInput = false;
+                parseMessage += "Bottom Cover must be a valid double\n";
+            }
 
             if (!Double.TryParse(MainWin.tbClearSpacing.Text, out clearspacing))
-                throw new InvalidOperationException("Clear Spacing must be a double");
+            {
+                bValidInput = false;
+                parseMessage += "Clear Spacing must be a valid double\n";
+            }
+
+            // If our parse info isn't valid, send a message and don't proceed any further.
+            if (!bValidInput)
+            {
+                MessageBox.Show(parseMessage);
+                return;
+            } else
+            {
+                GetSideCover = sidecover;
+                GetBottomCover = bottomcover;
+                GetClearSpacing = clearspacing;
+            }
 
             bool hasmintransstatus = (MainWin.cmbLightweightConcrete.SelectedIndex == 0 ? true : false);
-
 
             // Create the model
             Model = new InputModel(barSize, steelYieldStrength, concreteCompStrength, epoxyStatus, topBarStatus, lightweightStatus, sidecover, bottomcover, clearspacing, hasmintransstatus, 0);
@@ -245,9 +267,7 @@ namespace DevLengthApplication.ViewModels
             OnPropertyChanged("GetEpoxyStatus");
             OnPropertyChanged("GetTopBarStatus");
             OnPropertyChanged("GetLightweightConcreteStatus");
-            OnPropertyChanged("DisplayFactors");
-
-
+            OnPropertyChanged("GetDisplayFactors");
         }
     }
 }
