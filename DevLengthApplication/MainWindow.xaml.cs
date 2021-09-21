@@ -2,6 +2,8 @@
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using System.Windows.Media;
+using VMDiagrammer.Helpers;
 
 namespace DevLengthApplication
 {
@@ -22,6 +24,8 @@ namespace DevLengthApplication
             OnUserCreate();
 
             DataContext = InputVM;
+
+            OnUserUpdate();
         }
 
         /// <summary>
@@ -44,6 +48,20 @@ namespace DevLengthApplication
         }
 
         /// <summary>
+        /// Utility function that draws every time an update is needed.
+        /// </summary>
+        private void OnUserUpdate()
+        {
+            if (bWindowFinishedLoading)
+            {
+                InputVM.Update();
+                ShowACIDetails();
+                DrawingHelpers.DrawLine(MainCanvas, 0, 0, 400, 400, Brushes.Red, 1);
+                InputVM.DrawCanvas(MainCanvas);
+            }
+        }
+
+        /// <summary>
         /// Event that triggers when a combo box selection has changed.
         /// </summary>
         /// <param name="sender"></param>
@@ -52,8 +70,7 @@ namespace DevLengthApplication
         {
             if (bWindowFinishedLoading)
             {
-                InputVM.Update();
-                ShowACIDetails();
+                OnUserUpdate();
                 return;
             }
         }
@@ -67,8 +84,7 @@ namespace DevLengthApplication
         {
             if (bWindowFinishedLoading)
             {
-                InputVM.Update();
-                ShowACIDetails();
+                OnUserUpdate();
             }
         }
 
@@ -82,14 +98,12 @@ namespace DevLengthApplication
 
             if(e.Key == Key.Return)
             {
-                InputVM.Update();
-                ShowACIDetails();
+                OnUserUpdate();
             }
 
             if(e.Key == Key.Tab)
             {
-                InputVM.Update();
-                ShowACIDetails();
+                OnUserUpdate();
             }
         }
 

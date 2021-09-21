@@ -47,7 +47,7 @@
             <Label Grid.Row="6"  Grid.Column="0" Content="LW Concrete"/>
             <ComboBox Grid.Row="6" Grid.Column="1" Name="cmbLightweightConcrete" Width="75" Height="20" SelectionChanged="cmbSelectionChanged"/>
 
-            <Canvas Grid.RowSpan ="6" Grid.Column="2" x:Name="MainCanvas" Width="400" Height="260" Background="LightGray"/>
+            <Canvas Grid.RowSpan ="6" Grid.Column="2" Name="MainCanvas" Width="400" Height="260" Background="LightGray"/>
             <Button Name="btnShownACIDetailsCollapsedView" Grid.Row="0" Grid.Column="2"  Content="Show ACI Details" Click="ACIDetailsButton_Click"/>
 
             <!--<StackPanel Grid.Row="7" Grid.ColumnSpan="3" Orientation="Horizontal" HorizontalAlignment="Center">

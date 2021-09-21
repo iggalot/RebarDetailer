@@ -8,6 +8,8 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Media;
+using VMDiagrammer.Helpers;
 
 namespace DevLengthApplication.ViewModels
 {
@@ -322,6 +324,80 @@ namespace DevLengthApplication.ViewModels
             OnPropertyChanged("GetTopBarStatus");
             OnPropertyChanged("GetLightweightConcreteStatus");
             OnPropertyChanged("GetDisplayFactors");
+        }
+
+        public void DrawCanvas(Canvas c)
+        {
+            c.Children.Clear();
+            
+            if(Model.DevelopmentLengthObject != null)
+            {
+                BaseDevelopmentLength model = Model.DevelopmentLengthObject;
+                DevelopmentLengthTypes devType = model.DevLengthType;
+
+                double width = c.ActualWidth;
+                double height = c.ActualHeight;
+
+                
+
+                switch (devType)
+                {
+                    case DevelopmentLengthTypes.DEV_LENGTH_UNDEFINED:
+                        {
+                            DrawingHelpers.DrawText(c, 10, 10, 0, "No development length defined", Brushes.Black, 20);
+                            break;
+                        }
+                    case DevelopmentLengthTypes.DEV_LENGTH_STRAIGHT:
+                        {
+                            StraightDevelopmentLength straightModel = (StraightDevelopmentLength)model;
+
+
+                            double length = 100 * model.BarDiameter;
+                            double ins_x = 0.1 * width;
+                            double ins_y = 0.4 * height;
+                            double end_x = 0.9 * width;
+                            double end_y = 0.4 * height;
+
+                            double line_thick = model.BarSize * 3;
+
+                            // Draw the title of the sketch
+                            DrawingHelpers.DrawText(c, 0.5 * width - 70, height - 50, 0, "Straight Length", Brushes.Black, 20);
+
+                            // Draw the rebar object
+                            DrawingHelpers.DrawLine(c, ins_x, ins_y, end_x, end_y, Brushes.Black, line_thick);
+
+                            // Draw dimensions
+                            DrawingHelpers.DrawLine(c, ins_x, ins_y-10, ins_x, 0.05*height, Brushes.Green, 1, Linetypes.LINETYPE_PHANTOM);
+                            DrawingHelpers.DrawLine(c, end_x, end_y-10, end_x, 0.05*height, Brushes.Green, 1, Linetypes.LINETYPE_PHANTOM);
+                            DrawingHelpers.DrawLine(c, ins_x, 0.1*height, end_x, 0.1*height, Brushes.Green, 1, Linetypes.LINETYPE_PHANTOM);
+                            DrawingHelpers.DrawText(c, 0.5*(ins_x+end_x)-20, 0.1*height, 0, straightModel.DevLength().ToString() + " in.", Brushes.Black, 25);
+
+                            // Draw arrow and bar size
+                            DrawingHelpers.DrawArrowUp(c, 0.5 * (ins_x + end_x), 0.5 * (ins_y + end_y) + 0.5 * line_thick, Brushes.Red, Brushes.Red, 0.1 * line_thick, 1.5 * line_thick, 0.5 * line_thick);
+                            DrawingHelpers.DrawText(c, 0.5 * (ins_x + end_x)-15, 0.5 * (ins_y + end_y) + 2.0 * line_thick, 0, "#" + straightModel.BarSize.ToString(), Brushes.Black, 25);
+
+                            // Draw the critical location line
+                            DrawingHelpers.DrawLine(c, ins_x-5, ins_y - 0.3 * height, ins_x-5, ins_y + 0.3 * height, Brushes.Blue, 2, Linetypes.LINETYPE_DASHED);
+                            DrawingHelpers.DrawText(c, ins_x-18, ins_y + 0.3 * height, 0, "crit. loc.", Brushes.Black, 12);
+
+
+                            break;
+                        }
+                    case DevelopmentLengthTypes.DEV_LENGTH_HOOKED:
+                        {
+                            HookDevelopmentLength hookModel = (HookDevelopmentLength)model;
+                            if(hookModel.HookType == HookTypes.HOOK_STANDARD)
+                                DrawingHelpers.DrawText(c, 10, 10, 0, "Standard Hook", Brushes.Black, 20);
+                            else if (hookModel.HookType == HookTypes.HOOK_STIRRUP_TIE)
+                                DrawingHelpers.DrawText(c, 10, 10, 0, "Stirrup / Tie Hook", Brushes.Black, 20);
+                            else
+                                DrawingHelpers.DrawText(c, 10, 10, 0, "Unknown hook type", Brushes.Black, 20);
+                            break;
+                        }
+                    default:
+                        break;
+                }
+            }
         }
     }
 }

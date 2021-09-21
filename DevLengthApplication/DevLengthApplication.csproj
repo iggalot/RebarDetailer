@@ -55,6 +55,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Helpers\DrawingHelpers.cs" />
     <Compile Include="Models\InputModel.cs" />
     <Compile Include="Models\RebarModel.cs" />
     <Compile Include="ViewModels\BaseViewModel.cs" />

@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Windows.Controls;
 
 namespace RebarDetailsLibrary
 {
@@ -116,6 +114,5 @@ namespace RebarDetailsLibrary
         public virtual double DevLength() { return -1; }
 
         public virtual string DisplayFactors() { return "in base class"; }
-
     }
 }
