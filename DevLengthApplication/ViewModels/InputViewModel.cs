@@ -96,7 +96,7 @@ namespace DevLengthApplication.ViewModels
         {
             get
             {
-                return (Model.DisplaytDevelopmentFactors());
+                return (Model.DisplayDevelopmentFactors());
             }
         }
 

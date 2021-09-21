@@ -83,7 +83,7 @@ namespace DevLengthApplication.Models
 
         }
 
-        public string DisplaytDevelopmentFactors()
+        public string DisplayDevelopmentFactors()
         {
             string str = "";
             if (DevelopmentLengthObject != null)
