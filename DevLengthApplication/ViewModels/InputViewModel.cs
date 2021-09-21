@@ -18,7 +18,8 @@ namespace DevLengthApplication.ViewModels
         ObservableCollection<int> ocBarSize = new ObservableCollection<int> { 3, 4, 5, 6, 7, 8, 9, 10, 11, 14, 18 };
         ObservableCollection<int> ocSteelYieldStrength = new ObservableCollection<int> { 40000, 60000, 80000, 100000 };
         ObservableCollection<int> ocConcreteCompStrength = new ObservableCollection<int> { 2000, 2500, 3000, 3500, 4000, 4500, 5000, 5500, 6000, 6500, 7000, 7500, 10000 };
-
+        ObservableCollection<DevelopmentLengthTypes> ocDevelopmentLengthTypes = new ObservableCollection<DevelopmentLengthTypes> { DevelopmentLengthTypes.DEV_LENGTH_STRAIGHT, DevelopmentLengthTypes.DEV_LENGTH_HOOKED };
+        
         /// <summary>
         /// Our development length model basis
         /// </summary>
@@ -244,6 +245,17 @@ namespace DevLengthApplication.ViewModels
             cbi7 = new ComboBoxItem() { Content = "NO" };
             window.cmbHasMinTransverseReinf.Items.Add(cbi7);
             window.cmbHasMinTransverseReinf.SelectedItem = window.cmbHasMinTransverseReinf.Items[1];
+
+            // Create the develope bar type (straight, standard hook, ties, etc)
+            foreach (var item in ocDevelopmentLengthTypes)
+            {
+                ComboBoxItem cbi8 = new ComboBoxItem();
+                cbi8.Content = item.ToString();
+                window.cmbDevelopmentBarType.Items.Add(cbi8);
+            }
+            // Set the default bar type to the first item (straight bars)
+            window.cmbDevelopmentBarType.SelectedItem = window.cmbSteelYieldStrength.Items[0];
+            window.cmbDevelopmentBarType.FontSize = 15;
         }
 
         /// <summary>
@@ -258,7 +270,8 @@ namespace DevLengthApplication.ViewModels
                 (MainWin.cmbConcreteCompStrength.SelectedIndex == -1) ||
                 (MainWin.cmbEpoxy.SelectedIndex == -1) ||
                 (MainWin.cmbTopBars.SelectedIndex == -1) ||
-                (MainWin.cmbHasMinTransverseReinf.SelectedIndex == -1))
+                (MainWin.cmbHasMinTransverseReinf.SelectedIndex == -1) ||
+                (MainWin.cmbDevelopmentBarType.SelectedIndex == -1))
             {
                 modelIsValid = false;
             }
@@ -271,6 +284,7 @@ namespace DevLengthApplication.ViewModels
 
             // Read the input from the UI
             int barSize = ocBarSize[MainWin.cmbBarSize.SelectedIndex];
+            DevelopmentLengthTypes devLengthType = ocDevelopmentLengthTypes[MainWin.cmbDevelopmentBarType.SelectedIndex];
             double steelYieldStrength = ocSteelYieldStrength[MainWin.cmbSteelYieldStrength.SelectedIndex];
             double concreteCompStrength = ocConcreteCompStrength[MainWin.cmbConcreteCompStrength.SelectedIndex];
             bool epoxyStatus = (MainWin.cmbEpoxy.SelectedIndex == 0 ? true : false);
@@ -314,7 +328,7 @@ namespace DevLengthApplication.ViewModels
             bool hasmintransstatus = (MainWin.cmbLightweightConcrete.SelectedIndex == 0 ? true : false);
 
             // Create the model
-            Model = new InputModel(RebarDetailsLibrary.DevelopmentLengthTypes.DEV_LENGTH_STRAIGHT, barSize, steelYieldStrength, concreteCompStrength, epoxyStatus, topBarStatus, lightweightStatus, sidecover, bottomcover, clearspacing, hasmintransstatus, 0);
+            Model = new InputModel(devLengthType, barSize, steelYieldStrength, concreteCompStrength, epoxyStatus, topBarStatus, lightweightStatus, sidecover, bottomcover, clearspacing, hasmintransstatus, 0);
 
             OnPropertyChanged("GetSelectedBarSizeLabel");
             OnPropertyChanged("GetSelectedSteelYieldStrengthLabel");
@@ -334,11 +348,39 @@ namespace DevLengthApplication.ViewModels
             {
                 BaseDevelopmentLength model = Model.DevelopmentLengthObject;
                 DevelopmentLengthTypes devType = model.DevLengthType;
+                double len = model.DevLength();
 
                 double width = c.ActualWidth;
                 double height = c.ActualHeight;
 
                 
+                double dim = Math.Min(width, height);
+
+                // bounding box dimensions for our graphic
+                double bb_width = (0.9 * dim);
+                double bb_height = (0.9 * dim);
+                double bb_offset = (0.05 * dim);
+
+                // Bounding box coords
+                double bb1_x = 0 + bb_offset;
+                double bb1_y = 0 + bb_offset;
+                double bb2_x = bb1_x + bb_width;
+                double bb2_y = bb1_y;
+                double bb3_x = bb2_x;
+                double bb3_y = bb2_y + bb_height;
+                double bb4_x = bb1_x;
+                double bb4_y = bb3_y;
+                DrawingHelpers.DrawLine(c, bb1_x, bb1_y, bb2_x, bb2_y, Brushes.Red, 1, Linetypes.LINETYPE_DASHED);
+                DrawingHelpers.DrawLine(c, bb2_x, bb2_y, bb3_x, bb3_y, Brushes.Red, 1, Linetypes.LINETYPE_DASHED);
+                DrawingHelpers.DrawLine(c, bb3_x, bb3_y, bb4_x, bb4_y, Brushes.Red, 1, Linetypes.LINETYPE_DASHED);
+                DrawingHelpers.DrawLine(c, bb4_x, bb4_y, bb1_x, bb1_y, Brushes.Red, 1, Linetypes.LINETYPE_DASHED);
+
+                // determine the scale...
+                double scale_factor = bb_width / len;
+
+
+
+                double line_thick = model.BarSize * 3;
 
                 switch (devType)
                 {
@@ -349,49 +391,117 @@ namespace DevLengthApplication.ViewModels
                         }
                     case DevelopmentLengthTypes.DEV_LENGTH_STRAIGHT:
                         {
+                            double ins_x = bb1_x;
+                            double ins_y = 0.5*(bb1_y + bb4_y);
+                            double end_x = bb1_x + len * scale_factor;
+                            double end_y = ins_y;
+
                             StraightDevelopmentLength straightModel = (StraightDevelopmentLength)model;
 
-
-                            double length = 100 * model.BarDiameter;
-                            double ins_x = 0.1 * width;
-                            double ins_y = 0.4 * height;
-                            double end_x = 0.9 * width;
-                            double end_y = 0.4 * height;
-
-                            double line_thick = model.BarSize * 3;
-
                             // Draw the title of the sketch
-                            DrawingHelpers.DrawText(c, 0.5 * width - 70, height - 50, 0, "Straight Length", Brushes.Black, 20);
+                            DrawingHelpers.DrawText(c, 0.5 * (bb3_x + bb4_x) - 0.2 * bb_width, 0.5 * (bb3_y + bb4_y) - 0.10 * bb_height, 0, "Straight Length", Brushes.Black, 20);
 
                             // Draw the rebar object
                             DrawingHelpers.DrawLine(c, ins_x, ins_y, end_x, end_y, Brushes.Black, line_thick);
 
                             // Draw dimensions
-                            DrawingHelpers.DrawLine(c, ins_x, ins_y-10, ins_x, 0.05*height, Brushes.Green, 1, Linetypes.LINETYPE_PHANTOM);
-                            DrawingHelpers.DrawLine(c, end_x, end_y-10, end_x, 0.05*height, Brushes.Green, 1, Linetypes.LINETYPE_PHANTOM);
-                            DrawingHelpers.DrawLine(c, ins_x, 0.1*height, end_x, 0.1*height, Brushes.Green, 1, Linetypes.LINETYPE_PHANTOM);
-                            DrawingHelpers.DrawText(c, 0.5*(ins_x+end_x)-20, 0.1*height, 0, straightModel.DevLength().ToString() + " in.", Brushes.Black, 25);
+                            DrawingHelpers.DrawLine(c, ins_x, ins_y - 0.2 * bb_height, ins_x, ins_y - 0.2 * bb_height, Brushes.Green, 1, Linetypes.LINETYPE_PHANTOM);
+                            DrawingHelpers.DrawLine(c, end_x, end_y - 0.2 * bb_height, end_x, end_y - 0.2 * bb_height, Brushes.Green, 1, Linetypes.LINETYPE_PHANTOM);
+                            DrawingHelpers.DrawLine(c, ins_x, ins_y - 0.15 * bb_height, end_x, end_y - 0.15 * bb_height, Brushes.Green, 1, Linetypes.LINETYPE_PHANTOM);
+                            DrawingHelpers.DrawText(c, 0.5*(ins_x+end_x)-20, 0.5*(ins_y - 0.28 * bb_height + end_y - 0.28 * bb_height), 0, straightModel.DevLength().ToString() + " in.", Brushes.Black, 25);
 
                             // Draw arrow and bar size
-                            DrawingHelpers.DrawArrowUp(c, 0.5 * (ins_x + end_x), 0.5 * (ins_y + end_y) + 0.5 * line_thick, Brushes.Red, Brushes.Red, 0.1 * line_thick, 1.5 * line_thick, 0.5 * line_thick);
-                            DrawingHelpers.DrawText(c, 0.5 * (ins_x + end_x)-15, 0.5 * (ins_y + end_y) + 2.0 * line_thick, 0, "#" + straightModel.BarSize.ToString(), Brushes.Black, 25);
+                            DrawingHelpers.DrawArrowUp(c, 0.5 * (ins_x + end_x), 0.5 * (ins_y + end_y) + 0.5 * line_thick, Brushes.Red, Brushes.Red, 0.1 * line_thick, 0.15 * height, 0.05 * height );
+                            DrawingHelpers.DrawText(c, 0.5 * (ins_x + end_x)-15, 0.5 * (ins_y + end_y) + 0.2 * height, 0, "#" + straightModel.BarSize.ToString(), Brushes.Black, 25);
 
                             // Draw the critical location line
                             DrawingHelpers.DrawLine(c, ins_x-5, ins_y - 0.3 * height, ins_x-5, ins_y + 0.3 * height, Brushes.Blue, 2, Linetypes.LINETYPE_DASHED);
                             DrawingHelpers.DrawText(c, ins_x-18, ins_y + 0.3 * height, 0, "crit. loc.", Brushes.Black, 12);
-
 
                             break;
                         }
                     case DevelopmentLengthTypes.DEV_LENGTH_HOOKED:
                         {
                             HookDevelopmentLength hookModel = (HookDevelopmentLength)model;
+
                             if(hookModel.HookType == HookTypes.HOOK_STANDARD)
-                                DrawingHelpers.DrawText(c, 10, 10, 0, "Standard Hook", Brushes.Black, 20);
+                                // Draw the title of the sketch
+                                DrawingHelpers.DrawText(c, 0.5 * (bb3_x + bb4_x) - 0.2 * bb_width, 0.5 * (bb3_y + bb4_y) - 0.10 * bb_height, 0, "Standard Hook", Brushes.Black, 20);
+
                             else if (hookModel.HookType == HookTypes.HOOK_STIRRUP_TIE)
-                                DrawingHelpers.DrawText(c, 10, 10, 0, "Stirrup / Tie Hook", Brushes.Black, 20);
+                                // Draw the title of the sketch
+                                DrawingHelpers.DrawText(c, 0.5 * (bb3_x + bb4_x) - 0.2 * bb_width, 0.5 * (bb3_y + bb4_y) - 0.10 * bb_height, 0, "Stirrup / Tie Hook", Brushes.Black, 20);
+
                             else
-                                DrawingHelpers.DrawText(c, 10, 10, 0, "Unknown hook type", Brushes.Black, 20);
+                                // Draw the title of the sketch
+                                DrawingHelpers.DrawText(c, 0.5 * (bb3_x + bb4_x) - 0.2 * bb_width, 0.5 * (bb3_y + bb4_y) - 0.10 * bb_height, 0, "Unknown Hook Type", Brushes.Black, 20);
+
+                            // If we dont have a standard hook or a stirrup/tie hook
+                            if ((hookModel.HookType != HookTypes.HOOK_STANDARD) && (hookModel.HookType != HookTypes.HOOK_STIRRUP_TIE))
+                                // do nothing
+                                return;
+
+                            // recompute the scale factors in the eventthat Ldh is shorter than L_EXT + BendDia
+                            double val1 = bb_width / (hookModel.LDH);
+                            double val2 = bb_height / (hookModel.BendDia + hookModel.L_EXT);
+                            scale_factor = Math.Min(val1, val2);
+                           // scale_factor = 0.0;
+
+                            // Compute margin values to center the drawing
+                            double a = (bb_height - (hookModel.BendDia + hookModel.L_EXT) * scale_factor) / 2.0;
+                            double b = (bb_width - (hookModel.LDH) * scale_factor) / 2.0;
+
+                            double ins_x = bb1_x;
+                            double ins_y = bb1_y;
+                            double end_x = ins_x + (hookModel.LDH - hookModel.BendDia)*scale_factor;
+                            double end_y = ins_y;
+
+                            DrawingHelpers.DrawLine(c, ins_x, ins_y, end_x, end_y, Brushes.Black, line_thick);
+
+                            // Draw the hook now
+                            // Draw the LDH
+                            DrawingHelpers.DrawLine(c, end_x + (0.5 * hookModel.BendDia * scale_factor), end_y + 0.5 * hookModel.BendDia * scale_factor, end_x + (0.5 * hookModel.BendDia * scale_factor), end_y + (0.5*hookModel.BendDia + hookModel.L_EXT)*scale_factor, Brushes.Black, line_thick);
+                            //// Draw dimensions
+                            //DrawingHelpers.DrawLine(c, ins_x, ins_y - 10, ins_x, 0.05 * height, Brushes.Green, 1, Linetypes.LINETYPE_PHANTOM);
+                            //DrawingHelpers.DrawLine(c, end_x, end_y - 10, end_x, 0.05 * height, Brushes.Green, 1, Linetypes.LINETYPE_PHANTOM);
+                            //DrawingHelpers.DrawLine(c, ins_x, 0.1 * height, end_x, 0.1 * height, Brushes.Green, 1, Linetypes.LINETYPE_PHANTOM);
+                            //DrawingHelpers.DrawText(c, 0.5 * (ins_x + end_x) - 35, 0.1 * height, 0, "Ldh: " + hookModel.DevLength().ToString(), Brushes.Black, 15);
+
+
+
+                            //// Draw the L_EXT
+                            //DrawingHelpers.DrawLine(c, end_x, end_y + (0.5 * hookModel.BendDia * scale_factor), end_x, end_y + (0.5 * hookModel.BendDia + hookModel.L_EXT)*scale_factor, Brushes.Black, line_thick);
+                            //// Draw dimensions
+                            //DrawingHelpers.DrawLine(c, 
+                            //    end_x + 10, 
+                            //    end_y + (0.5 * hookModel.BendDia) * scale_factor, 
+                            //    end_x + 10 + 0.15 * width, 
+                            //    end_y + (0.5 * hookModel.BendDia) * scale_factor, Brushes.Green, 1, Linetypes.LINETYPE_PHANTOM);
+                            //DrawingHelpers.DrawLine(c, 
+                            //    end_x + 10, 
+                            //    end_y + (((0.5 * hookModel.BendDia) + hookModel.L_EXT) * scale_factor), 
+                            //    end_x + 10 + 0.15*width, 
+                            //    end_y + (((0.5 * hookModel.BendDia) + hookModel.L_EXT) * scale_factor), Brushes.Green, 1, Linetypes.LINETYPE_PHANTOM);
+                            //DrawingHelpers.DrawLine(c, 
+                            //    end_x + 10 + 0.03*width, 
+                            //    end_y + (((0.5 * hookModel.BendDia) + hookModel.L_EXT) * scale_factor),
+                            //    end_x + 10 + 0.03 * width,
+                            //    end_y + (0.5 * hookModel.BendDia) * scale_factor, Brushes.Green, 1, Linetypes.LINETYPE_PHANTOM);
+                            //DrawingHelpers.DrawText(c, 
+                            //    end_x + 10 + 0.06 * width,
+                            //    end_y + (0.5 * hookModel.BendDia)*scale_factor + 0.5 * hookModel.L_EXT * scale_factor - 9,
+                            //    0, "Lext: " + Math.Ceiling(hookModel.L_EXT).ToString(), Brushes.Black, 15);
+
+                            //// Draw the bend radius
+                            //DrawingHelpers.DrawLine(c, end_x - (0.5 * hookModel.BendDia) * scale_factor, end_y, end_x, end_y + (0.5*hookModel.BendDia * scale_factor), Brushes.Black, line_thick,Linetypes.LINETYPE_DASHED);
+
+                            // Draw the critical location line
+                            DrawingHelpers.DrawLine(c, bb1_x, bb1_y, bb4_x, bb4_y, Brushes.Blue, 2, Linetypes.LINETYPE_DASHED);
+                            DrawingHelpers.DrawText(c, bb4_x-15, bb4_y, 0, "crit. loc.", Brushes.Black, 12);
+
+
+
+
                             break;
                         }
                     default:

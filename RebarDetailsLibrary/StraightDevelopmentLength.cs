@@ -124,6 +124,17 @@ namespace RebarDetailsLibrary
             // Tension development length per ACI318-19 Eqn. 25.4.2.4a
             double devLength_allfactors = (3 * SteelYieldStrength * PSI_S * PSI_G * psi_e_x_psi_t_product / (40.0 * Lambda * Math.Sqrt(ConcreteCompStrength) * cb_plus_Ktr_factor)) * BarDiameter;
 
+            if (devLength_allfactors < 12)
+            {
+                StatusMessageList.Add("- min. LD from 25.4.2.1(b) = 12 in. controls.");
+            }
+            else
+            {
+                StatusMessageList.Add("- LD calculated from 25.4.2.1(a) controls.");
+            }
+
+            devLength_allfactors = Math.Max(devLength_allfactors, 12.0);
+
             if (DEBUG_MODE)
             {
                 Console.WriteLine("   Analyzing a #" + BarSize.ToString() + " straight bar with fy=" + SteelYieldStrength.ToString() + " psi amd f'c=" + ConcreteCompStrength.ToString() + "psi");

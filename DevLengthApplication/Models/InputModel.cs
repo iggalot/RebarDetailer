@@ -59,6 +59,8 @@ namespace DevLengthApplication.Models
                     //this.ComputeDevelopmentLength();
                     break;
                 case DevelopmentLengthTypes.DEV_LENGTH_HOOKED:
+                    DevelopmentLengthObject = new HookDevelopmentLength(size, yield, comp, false, HookTypes.HOOK_STANDARD, 90, cc_spacing, sidecover, topbotcover, lightweight, epoxy, topbar);
+
                     break;
                 default:
                     {

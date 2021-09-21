@@ -11,7 +11,7 @@
         <Grid VerticalAlignment="Center">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="80"/>
-                <ColumnDefinition Width="110"/>
+                <ColumnDefinition Width="120"/>
                 <ColumnDefinition Width="400"/>
                 <ColumnDefinition Width="*"/>
 
@@ -27,7 +27,8 @@
                 <RowDefinition Height="*"/>
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
-            <TextBlock Name="tbDevelopmentLengthStraight" FontSize="20" Text= "{Binding GetDevelopmentLengthStraight}" Width="75" Height="30" Background="Gray"/>
+            <!--<TextBlock Name="tbDevelopmentLengthStraight" FontSize="20" Text= "{Binding GetDevelopmentLengthStraight}" Width="75" Height="30" Background="Gray"/>-->
+            <ComboBox Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Name="cmbDevelopmentBarType" Width="190" Height="25" HorizontalAlignment="Left" SelectionChanged="cmbSelectionChanged"/>
 
             <Label Grid.Row="1" Grid.Column="0" Content="Bar #"/>
             <ComboBox Grid.Row="1" Grid.Column="1" Name="cmbBarSize" Width="75" Height="20" SelectionChanged="cmbSelectionChanged"/>
@@ -47,7 +48,7 @@
             <Label Grid.Row="6"  Grid.Column="0" Content="LW Concrete"/>
             <ComboBox Grid.Row="6" Grid.Column="1" Name="cmbLightweightConcrete" Width="75" Height="20" SelectionChanged="cmbSelectionChanged"/>
 
-            <Canvas Grid.RowSpan ="6" Grid.Column="2" Name="MainCanvas" Width="400" Height="260" Background="LightGray"/>
+            <Canvas Grid.RowSpan ="6" Grid.Column="2" Name="MainCanvas" Width="350" Height="350" Background="LightGray"/>
             <Button Name="btnShownACIDetailsCollapsedView" Grid.Row="0" Grid.Column="2"  Content="Show ACI Details" Click="ACIDetailsButton_Click"/>
 
             <!--<StackPanel Grid.Row="7" Grid.ColumnSpan="3" Orientation="Horizontal" HorizontalAlignment="Center">

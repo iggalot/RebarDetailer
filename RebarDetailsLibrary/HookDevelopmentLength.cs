@@ -108,7 +108,7 @@ namespace RebarDetailsLibrary
             }
             Console.WriteLine(status_string);
 
-            return LDH;
+            return Math.Ceiling(LDH);
         }
         private void DetermineHookLengthValues()
         {
@@ -470,6 +470,12 @@ namespace RebarDetailsLibrary
                 msg = "PSI_C = 1.0 for f'c < 6000psi per ACI318-19 Table 25.4.2.5";
                 return 1.0;
             }
+        }
+
+        public override double DevLength()
+        {
+            double val = HookLength();
+            return val;
         }
     }
 }
