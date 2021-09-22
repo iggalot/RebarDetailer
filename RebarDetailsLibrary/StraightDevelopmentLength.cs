@@ -245,13 +245,14 @@ namespace RebarDetailsLibrary
 
         private static double ComputePSI_E_x_Psi_T_Product(double psi_e, double psi_t, out string msg)
         {
+            msg = "PSI_E x PSI_T product ";
             if (psi_e * psi_t > 1.7)
             {
-                msg = "PSI_E x PSI_T product > 1.7. ACI318-19 Table 25.4.2.5 limits product to max of 1.7";
+                msg += " is limited at max of 1.7 (computed as " + (psi_e * psi_t).ToString() + ") per ACI318-19 Table 25.4.2.5";
                 return 1.7;
             } else
             {
-                msg = "PSI_E x PSI_T product less than 1.7 -- ACI318-19 Table 25.4.2.5";
+                msg += "= " + (psi_e * psi_t).ToString() + "is less than 1.7 so no limit imposed per ACI318-19 Table 25.4.2.5";
                 return (psi_e * psi_t);
             }
 
@@ -347,23 +348,6 @@ namespace RebarDetailsLibrary
             return Math.Max(12, (3.0 * fy * psi_e_x_psi_t_product * psi_g) / (40.0 * lambda * Math.Sqrt(fc)) * dia);
         }
         #endregion
-
-        public override BaseDevelopmentLength Compute()
-        {
-            return null;
- //           return this.Straight();
- //           var sdl = new StraightDevelopmentLength(BarSize, SteelYieldStrength, ConcreteCompStrength, false, K_TR, HasMinTransverseReinf, CC_Spacing, SideCover, BottomCover, LightWeightConcreteStatus, EpoxyBarStatus, TopBarStatus);
-//return sdl;
-        }
-
-        public override string DisplayFactors()
-        {
-            string str = "";
-            foreach (var msg in StatusMessageList)
-                str += msg + "\n";
-            str += "In straight display";
-            return str;
-        }
 
         public override double DevLength()
         {

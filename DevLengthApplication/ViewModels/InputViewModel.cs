@@ -16,8 +16,8 @@ namespace DevLengthApplication.ViewModels
     public class InputViewModel : BaseViewModel
     {
         ObservableCollection<int> ocBarSize = new ObservableCollection<int> { 3, 4, 5, 6, 7, 8, 9, 10, 11, 14, 18 };
-        ObservableCollection<int> ocSteelYieldStrength = new ObservableCollection<int> { 40000, 60000, 80000, 100000 };
-        ObservableCollection<int> ocConcreteCompStrength = new ObservableCollection<int> { 2000, 2500, 3000, 3500, 4000, 4500, 5000, 5500, 6000, 6500, 7000, 7500, 10000 };
+        ObservableCollection<int> ocSteelYieldStrength = new ObservableCollection<int> { 40, 60, 80, 100 };
+        ObservableCollection<int> ocConcreteCompStrength = new ObservableCollection<int> { 500, 1000, 1500, 2000, 2500, 3000, 3500, 4000, 4500, 5000, 5500, 6000, 6500, 7000, 7500, 10000 };
         ObservableCollection<DevelopmentLengthTypes> ocDevelopmentLengthTypes = new ObservableCollection<DevelopmentLengthTypes> { DevelopmentLengthTypes.DEV_LENGTH_STRAIGHT, DevelopmentLengthTypes.DEV_LENGTH_HOOKED };
         
         /// <summary>
@@ -189,12 +189,17 @@ namespace DevLengthApplication.ViewModels
             foreach (var item in ocBarSize)
             {
                 ComboBoxItem cbi1 = new ComboBoxItem();
-                cbi1.Content = item.ToString();
+                cbi1.Content = "#"+item.ToString();
                 window.cmbBarSize.Items.Add(cbi1);
             }
 
             // Set the default to the first item
             window.cmbBarSize.SelectedItem = window.cmbBarSize.Items[1];
+            window.cmbBarSize.FontSize = 25;
+            window.cmbBarSize.FontWeight = FontWeights.Bold;
+            window.cmbBarSize.HorizontalAlignment = HorizontalAlignment.Center;
+            window.cmbBarSize.VerticalAlignment = VerticalAlignment.Top;
+
 
             // Create the yield stress drop down
             foreach (var item in ocSteelYieldStrength)
@@ -206,6 +211,10 @@ namespace DevLengthApplication.ViewModels
 
             // Set the yield strength default to 60000
             window.cmbSteelYieldStrength.SelectedItem = window.cmbSteelYieldStrength.Items[1];
+            window.cmbSteelYieldStrength.FontSize = 15;
+            window.cmbSteelYieldStrength.FontWeight = FontWeights.Bold;
+            window.cmbSteelYieldStrength.HorizontalAlignment = HorizontalAlignment.Center;
+            window.cmbSteelYieldStrength.VerticalAlignment = VerticalAlignment.Top;
 
             // Create the concrete compressive stress drop down
             foreach (var item in ocConcreteCompStrength)
@@ -216,7 +225,11 @@ namespace DevLengthApplication.ViewModels
             }
 
             // Set the concrete compressive strength default to 3000
-            window.cmbConcreteCompStrength.SelectedItem = window.cmbConcreteCompStrength.Items[2];
+            window.cmbConcreteCompStrength.SelectedItem = window.cmbConcreteCompStrength.Items[5];
+            window.cmbConcreteCompStrength.FontSize = 15;
+            window.cmbConcreteCompStrength.FontWeight = FontWeights.Bold;
+            window.cmbConcreteCompStrength.HorizontalAlignment = HorizontalAlignment.Center;
+            window.cmbConcreteCompStrength.VerticalAlignment = VerticalAlignment.Top;
 
             // Create the epoxy drop down
             ComboBoxItem cbi4 = new ComboBoxItem() { Content = "YES" };
@@ -254,7 +267,7 @@ namespace DevLengthApplication.ViewModels
                 window.cmbDevelopmentBarType.Items.Add(cbi8);
             }
             // Set the default bar type to the first item (straight bars)
-            window.cmbDevelopmentBarType.SelectedItem = window.cmbSteelYieldStrength.Items[0];
+            //window.cmbDevelopmentBarType.SelectedItem = window.cmbDevelopmentBarType.Items[0];
             window.cmbDevelopmentBarType.FontSize = 15;
         }
 
@@ -285,7 +298,7 @@ namespace DevLengthApplication.ViewModels
             // Read the input from the UI
             int barSize = ocBarSize[MainWin.cmbBarSize.SelectedIndex];
             DevelopmentLengthTypes devLengthType = ocDevelopmentLengthTypes[MainWin.cmbDevelopmentBarType.SelectedIndex];
-            double steelYieldStrength = ocSteelYieldStrength[MainWin.cmbSteelYieldStrength.SelectedIndex];
+            double steelYieldStrength = ocSteelYieldStrength[MainWin.cmbSteelYieldStrength.SelectedIndex]*1000;
             double concreteCompStrength = ocConcreteCompStrength[MainWin.cmbConcreteCompStrength.SelectedIndex];
             bool epoxyStatus = (MainWin.cmbEpoxy.SelectedIndex == 0 ? true : false);
             bool topBarStatus = (MainWin.cmbTopBars.SelectedIndex == 0 ? true : false);
@@ -370,17 +383,17 @@ namespace DevLengthApplication.ViewModels
                 double bb3_y = bb2_y + bb_height;
                 double bb4_x = bb1_x;
                 double bb4_y = bb3_y;
-                DrawingHelpers.DrawLine(c, bb1_x, bb1_y, bb2_x, bb2_y, Brushes.Red, 1, Linetypes.LINETYPE_DASHED);
-                DrawingHelpers.DrawLine(c, bb2_x, bb2_y, bb3_x, bb3_y, Brushes.Red, 1, Linetypes.LINETYPE_DASHED);
-                DrawingHelpers.DrawLine(c, bb3_x, bb3_y, bb4_x, bb4_y, Brushes.Red, 1, Linetypes.LINETYPE_DASHED);
-                DrawingHelpers.DrawLine(c, bb4_x, bb4_y, bb1_x, bb1_y, Brushes.Red, 1, Linetypes.LINETYPE_DASHED);
+                
+                //// BorderBox boundary (for debugging)
+                //DrawingHelpers.DrawLine(c, bb1_x, bb1_y, bb2_x, bb2_y, Brushes.Red, 1, Linetypes.LINETYPE_DASHED);
+                //DrawingHelpers.DrawLine(c, bb2_x, bb2_y, bb3_x, bb3_y, Brushes.Red, 1, Linetypes.LINETYPE_DASHED);
+                //DrawingHelpers.DrawLine(c, bb3_x, bb3_y, bb4_x, bb4_y, Brushes.Red, 1, Linetypes.LINETYPE_DASHED);
+                //DrawingHelpers.DrawLine(c, bb4_x, bb4_y, bb1_x, bb1_y, Brushes.Red, 1, Linetypes.LINETYPE_DASHED);
 
                 // determine the scale...
                 double scale_factor = bb_width / len;
 
-
-
-                double line_thick = model.BarSize * 3;
+                double line_thick = model.BarSize;
 
                 switch (devType)
                 {
@@ -404,15 +417,15 @@ namespace DevLengthApplication.ViewModels
                             // Draw the rebar object
                             DrawingHelpers.DrawLine(c, ins_x, ins_y, end_x, end_y, Brushes.Black, line_thick);
 
-                            // Draw dimensions
-                            DrawingHelpers.DrawLine(c, ins_x, ins_y - 0.2 * bb_height, ins_x, ins_y - 0.2 * bb_height, Brushes.Green, 1, Linetypes.LINETYPE_PHANTOM);
-                            DrawingHelpers.DrawLine(c, end_x, end_y - 0.2 * bb_height, end_x, end_y - 0.2 * bb_height, Brushes.Green, 1, Linetypes.LINETYPE_PHANTOM);
-                            DrawingHelpers.DrawLine(c, ins_x, ins_y - 0.15 * bb_height, end_x, end_y - 0.15 * bb_height, Brushes.Green, 1, Linetypes.LINETYPE_PHANTOM);
-                            DrawingHelpers.DrawText(c, 0.5*(ins_x+end_x)-20, 0.5*(ins_y - 0.28 * bb_height + end_y - 0.28 * bb_height), 0, straightModel.DevLength().ToString() + " in.", Brushes.Black, 25);
+                            // Draw dimensions for LD
+                            DrawingHelpers.DrawLine(c, ins_x, ins_y - line_thick, ins_x, 0.2 * bb_height, Brushes.Green, 1, Linetypes.LINETYPE_PHANTOM);
+                            DrawingHelpers.DrawLine(c, end_x, end_y - line_thick, end_x, 0.2 * bb_height, Brushes.Green, 1, Linetypes.LINETYPE_PHANTOM);
+                            DrawingHelpers.DrawLine(c, ins_x, 0.22 * bb_height, end_x, 0.22 * bb_height, Brushes.Green, 1, Linetypes.LINETYPE_PHANTOM);
+                            DrawingHelpers.DrawText(c, 0.5 * (ins_x + end_x)-30, 0.20 * height, 0, "Ld: " + straightModel.DevLength().ToString() + "in.", Brushes.Green, 15);
 
                             // Draw arrow and bar size
-                            DrawingHelpers.DrawArrowUp(c, 0.5 * (ins_x + end_x), 0.5 * (ins_y + end_y) + 0.5 * line_thick, Brushes.Red, Brushes.Red, 0.1 * line_thick, 0.15 * height, 0.05 * height );
-                            DrawingHelpers.DrawText(c, 0.5 * (ins_x + end_x)-15, 0.5 * (ins_y + end_y) + 0.2 * height, 0, "#" + straightModel.BarSize.ToString(), Brushes.Black, 25);
+                            DrawingHelpers.DrawArrowUp(c, 0.5 * (ins_x + end_x), 0.5 * (ins_y + end_y) + 0.5 * line_thick, Brushes.Red, Brushes.Red, 2, 0.1 * height, 0.035 * height);
+                            DrawingHelpers.DrawText(c, 0.5 * (ins_x + end_x)-15, 0.5 * (ins_y + end_y) + 0.1 * height, 0, "#" + straightModel.BarSize.ToString(), Brushes.Black, 25);
 
                             // Draw the critical location line
                             DrawingHelpers.DrawLine(c, ins_x-5, ins_y - 0.3 * height, ins_x-5, ins_y + 0.3 * height, Brushes.Blue, 2, Linetypes.LINETYPE_DASHED);
@@ -442,62 +455,85 @@ namespace DevLengthApplication.ViewModels
                                 return;
 
                             // recompute the scale factors in the eventthat Ldh is shorter than L_EXT + BendDia
-                            double val1 = bb_width / (hookModel.LDH);
-                            double val2 = bb_height / (hookModel.BendDia + hookModel.L_EXT);
+                            double val1 = 0.8*bb_width / (hookModel.LDH);
+                            double val2 = 0.8*bb_height / (0.5*hookModel.BendDia + hookModel.L_EXT);
                             scale_factor = Math.Min(val1, val2);
-                           // scale_factor = 0.0;
 
-                            // Compute margin values to center the drawing
-                            double a = (bb_height - (hookModel.BendDia + hookModel.L_EXT) * scale_factor) / 2.0;
-                            double b = (bb_width - (hookModel.LDH) * scale_factor) / 2.0;
+                            // reduce the scale factor by an arbitrary amount
+                            scale_factor = scale_factor  - 0.05 * hookModel.BarSize;
 
-                            double ins_x = bb1_x;
-                            double ins_y = bb1_y;
-                            double end_x = ins_x + (hookModel.LDH - hookModel.BendDia)*scale_factor;
-                            double end_y = ins_y;
+                            // unscaled dimensions
+                            double horiz_unscaled = hookModel.LDH;
+                            double vert_unscaled = hookModel.L_EXT + 0.5 * hookModel.BendDia;
 
-                            DrawingHelpers.DrawLine(c, ins_x, ins_y, end_x, end_y, Brushes.Black, line_thick);
+                            // LDH_1 (start of horizontal LDH line)
+                            double ldh1_x = bb1_x+0.05*bb_width;
+                            double ldh1_y = bb1_y+0.10*bb_height;  // shift the line up by half a thickness
 
-                            // Draw the hook now
-                            // Draw the LDH
-                            DrawingHelpers.DrawLine(c, end_x + (0.5 * hookModel.BendDia * scale_factor), end_y + 0.5 * hookModel.BendDia * scale_factor, end_x + (0.5 * hookModel.BendDia * scale_factor), end_y + (0.5*hookModel.BendDia + hookModel.L_EXT)*scale_factor, Brushes.Black, line_thick);
-                            //// Draw dimensions
-                            //DrawingHelpers.DrawLine(c, ins_x, ins_y - 10, ins_x, 0.05 * height, Brushes.Green, 1, Linetypes.LINETYPE_PHANTOM);
-                            //DrawingHelpers.DrawLine(c, end_x, end_y - 10, end_x, 0.05 * height, Brushes.Green, 1, Linetypes.LINETYPE_PHANTOM);
-                            //DrawingHelpers.DrawLine(c, ins_x, 0.1 * height, end_x, 0.1 * height, Brushes.Green, 1, Linetypes.LINETYPE_PHANTOM);
-                            //DrawingHelpers.DrawText(c, 0.5 * (ins_x + end_x) - 35, 0.1 * height, 0, "Ldh: " + hookModel.DevLength().ToString(), Brushes.Black, 15);
+                            // LDH_2 (end of horizontal LDH line)
+                            double ldh2_x = ldh1_x + (hookModel.LDH - 0.5 * hookModel.BendDia)*scale_factor;
+                            double ldh2_y = ldh1_y;
 
+                            // Draw the LDH Line
+                            DrawingHelpers.DrawLine(c, ldh1_x, ldh1_y, ldh2_x, ldh2_y, Brushes.Black, line_thick);
 
+                            // Draw the hook and extension now
+                            // LEXT_1 (top of hook extension line)
+                            double lext1_x = ldh2_x + 0.5 * hookModel.BendDia * scale_factor + 0.5*line_thick;
+                            double lext1_y = ldh2_y + 0.5 * hookModel.BendDia * scale_factor + 0.5 * line_thick;
 
-                            //// Draw the L_EXT
-                            //DrawingHelpers.DrawLine(c, end_x, end_y + (0.5 * hookModel.BendDia * scale_factor), end_x, end_y + (0.5 * hookModel.BendDia + hookModel.L_EXT)*scale_factor, Brushes.Black, line_thick);
-                            //// Draw dimensions
-                            //DrawingHelpers.DrawLine(c, 
-                            //    end_x + 10, 
-                            //    end_y + (0.5 * hookModel.BendDia) * scale_factor, 
-                            //    end_x + 10 + 0.15 * width, 
-                            //    end_y + (0.5 * hookModel.BendDia) * scale_factor, Brushes.Green, 1, Linetypes.LINETYPE_PHANTOM);
-                            //DrawingHelpers.DrawLine(c, 
-                            //    end_x + 10, 
-                            //    end_y + (((0.5 * hookModel.BendDia) + hookModel.L_EXT) * scale_factor), 
-                            //    end_x + 10 + 0.15*width, 
-                            //    end_y + (((0.5 * hookModel.BendDia) + hookModel.L_EXT) * scale_factor), Brushes.Green, 1, Linetypes.LINETYPE_PHANTOM);
-                            //DrawingHelpers.DrawLine(c, 
-                            //    end_x + 10 + 0.03*width, 
-                            //    end_y + (((0.5 * hookModel.BendDia) + hookModel.L_EXT) * scale_factor),
-                            //    end_x + 10 + 0.03 * width,
-                            //    end_y + (0.5 * hookModel.BendDia) * scale_factor, Brushes.Green, 1, Linetypes.LINETYPE_PHANTOM);
-                            //DrawingHelpers.DrawText(c, 
-                            //    end_x + 10 + 0.06 * width,
-                            //    end_y + (0.5 * hookModel.BendDia)*scale_factor + 0.5 * hookModel.L_EXT * scale_factor - 9,
-                            //    0, "Lext: " + Math.Ceiling(hookModel.L_EXT).ToString(), Brushes.Black, 15);
+                            // LEXT_1 (bottom of hook extension line)
+                            double lext2_x = lext1_x;
+                            double lext2_y = lext1_y + hookModel.L_EXT * scale_factor + 0.5 * line_thick;
 
-                            //// Draw the bend radius
-                            //DrawingHelpers.DrawLine(c, end_x - (0.5 * hookModel.BendDia) * scale_factor, end_y, end_x, end_y + (0.5*hookModel.BendDia * scale_factor), Brushes.Black, line_thick,Linetypes.LINETYPE_DASHED);
+                            // Draw the LEXT line
+                            DrawingHelpers.DrawLine(c, lext1_x, lext1_y, lext2_x, lext2_y, Brushes.Black, line_thick);
 
+                            // Draw the radius between LDH2 and LEXT1 with center at ldh2_x and lext1_y
+                            // TODO::  this is kind of hacky.  Find a way to drop arc segments.
+                            double center_x = ldh2_x;
+                            double center_y = lext1_y;
+                            double radius = 0.5 * hookModel.BendDia * scale_factor + 0.5*line_thick;
+
+                            double x_start = lext1_x;
+                            double y_start = lext1_y;
+                            double x_end;
+                            double y_end;
+
+                            for (int i = 0; i <= 90; i=i+5)
+                            {
+                                x_end = center_x + radius*Math.Cos(i * Math.PI / 180.0);
+                                y_end = center_y - radius*Math.Sin(i * Math.PI / 180.0);
+                                DrawingHelpers.DrawLine(c, x_start, y_start, x_end, y_end, Brushes.Black, line_thick);
+                                x_start = x_end;
+                                y_start = y_end;
+                            }
+
+                            // Draw the Bend diameter circle (blue dashed) and arrow and label
+                            DrawingHelpers.DrawCircle(c, ldh2_x, lext1_y, Brushes.Transparent, Brushes.Blue, hookModel.BendDia * scale_factor, 1, Linetypes.LINETYPE_DASHED); ;
+                            // Draw arrow and bar size
+                            DrawingHelpers.DrawArrowUp(c, ldh2_x, lext1_y + 0.5 * hookModel.BendDia * scale_factor, Brushes.Blue, Brushes.Blue, 2, 0.13 * height, 0.035 * height);
+                            DrawingHelpers.DrawText(c, ldh2_x - 35, lext1_y + 0.5 * hookModel.BendDia * scale_factor + 0.15 * height, 0, "Dia.=" + hookModel.BarSize.ToString() + "in.", Brushes.Blue, 15);
+
+                            // Draw dimensions for LDH
+                            DrawingHelpers.DrawLine(c, ldh1_x, ldh1_y - 10, ldh1_x, 0.02 * height, Brushes.Green, 1, Linetypes.LINETYPE_PHANTOM);
+                            DrawingHelpers.DrawLine(c, lext1_x + 0.5*line_thick, lext1_y - 30, lext1_x + 0.5*line_thick, 0.02 * height, Brushes.Green, 1, Linetypes.LINETYPE_PHANTOM);
+                            DrawingHelpers.DrawLine(c, ldh1_x, 0.03 * height, lext1_x + 0.5*line_thick, 0.03 * height, Brushes.Green, 1, Linetypes.LINETYPE_PHANTOM);
+                            DrawingHelpers.DrawText(c, 0.5 * (ldh1_x + ldh2_x), 0.03 * height, 0, "Ldh: " + hookModel.DevLength().ToString() + "in.", Brushes.Green, 15);
+
+                            // Draw dimensions for L_EXT
+                            DrawingHelpers.DrawLine(c, lext1_x + line_thick + 10, lext1_y, lext1_x + line_thick + 0.20 * width, lext1_y, Brushes.Green, 1, Linetypes.LINETYPE_PHANTOM);
+                            DrawingHelpers.DrawLine(c, lext2_x + line_thick + 10, lext2_y, lext2_x + line_thick + 0.20 * width, lext2_y, Brushes.Green, 1, Linetypes.LINETYPE_PHANTOM);
+                            DrawingHelpers.DrawLine(c, lext1_x + line_thick + 0.15 * width, lext1_y, lext2_x + line_thick + 0.15 * width, lext2_y, Brushes.Green, 1, Linetypes.LINETYPE_PHANTOM);
+                            DrawingHelpers.DrawText(c, lext1_x + line_thick, 0.5*(lext1_y + lext2_y) - 15, 0, "L_EXT: \n  " + hookModel.L_EXT.ToString() + "in.", Brushes.Green, 15);
+
+                            // Draw arrow and bar size
+                            DrawingHelpers.DrawArrowUp(c, 0.25 * (ldh1_x + ldh2_x), 0.5 * (ldh1_y + ldh2_y) + 0.5 * line_thick, Brushes.Red, Brushes.Red, 2, 0.1* height, 0.035 * height);
+                            DrawingHelpers.DrawText(c, 0.25 * (ldh1_x + ldh2_x) - 15, 0.5 * (ldh1_y + ldh1_y) + 0.5 * line_thick + 0.1*height, 0, "#" + hookModel.BarSize.ToString(), Brushes.Black, 25);
+                           
                             // Draw the critical location line
-                            DrawingHelpers.DrawLine(c, bb1_x, bb1_y, bb4_x, bb4_y, Brushes.Blue, 2, Linetypes.LINETYPE_DASHED);
-                            DrawingHelpers.DrawText(c, bb4_x-15, bb4_y, 0, "crit. loc.", Brushes.Black, 12);
+                            DrawingHelpers.DrawLine(c, ldh1_x-5, bb1_y, ldh1_x-5, bb4_y, Brushes.Blue, 2, Linetypes.LINETYPE_DASHED);
+                            DrawingHelpers.DrawText(c, ldh1_x-17, bb4_y, 0, "crit. loc.", Brushes.Black, 12);
 
 
 

@@ -5,79 +5,109 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:DevLengthApplication"
         mc:Ignorable="d"
-        Title="Development Length Calculator v1.0" Width="1050" Height="500"
+        Title="Development Length Calculator v1.0" Width="1400" Height="550"
         Loaded="OnWindowLoaded">
     <Border Background="Teal" Margin="10" Padding="25">
-        <Grid VerticalAlignment="Center">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="80"/>
-                <ColumnDefinition Width="120"/>
-                <ColumnDefinition Width="400"/>
-                <ColumnDefinition Width="*"/>
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Background="Green">
+            <StackPanel Orientation="Vertical" HorizontalAlignment="Center" Margin="10">
+                <Grid VerticalAlignment="Center">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+                    <!--<TextBlock Name="tbDevelopmentLengthStraight" FontSize="20" Text= "{Binding GetDevelopmentLengthStraight}" Width="75" Height="30" Background="Gray"/>-->
+                    <ComboBox Grid.Row="0" Grid.ColumnSpan="3" Name="cmbDevelopmentBarType" Margin="10" Width="300" Height="25" HorizontalAlignment="Center" SelectionChanged="cmbSelectionChanged"/>
 
-            </Grid.ColumnDefinitions>
-            <Grid.RowDefinitions>
-                <RowDefinition Height="*"/>
-                <RowDefinition Height="*"/>
-                <RowDefinition Height="*"/>
-                <RowDefinition Height="*"/>
-                <RowDefinition Height="*"/>
-                <RowDefinition Height="*"/>
-                <RowDefinition Height="*"/>
-                <RowDefinition Height="*"/>
-                <RowDefinition Height="*"/>
-            </Grid.RowDefinitions>
-            <!--<TextBlock Name="tbDevelopmentLengthStraight" FontSize="20" Text= "{Binding GetDevelopmentLengthStraight}" Width="75" Height="30" Background="Gray"/>-->
-            <ComboBox Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Name="cmbDevelopmentBarType" Width="190" Height="25" HorizontalAlignment="Left" SelectionChanged="cmbSelectionChanged"/>
+                    <!--<Label Grid.Row="1" Grid.Column="0" Content="Bar #" HorizontalAlignment="Center"/>-->
+                    <ComboBox Grid.Row="1" Grid.Column="2" Grid.ColumnSpan="2" Grid.RowSpan="2" Name="cmbBarSize" Margin="5" Width="90" HorizontalAlignment="Center"  SelectionChanged="cmbSelectionChanged"/>
 
-            <Label Grid.Row="1" Grid.Column="0" Content="Bar #"/>
-            <ComboBox Grid.Row="1" Grid.Column="1" Name="cmbBarSize" Width="75" Height="20" SelectionChanged="cmbSelectionChanged"/>
-            
-            <Label Grid.Row="2" Grid.Column="0" Content="fy"/>
-            <ComboBox Grid.Row="2" Grid.Column="1" Name="cmbSteelYieldStrength" Width="75" Height="20" SelectionChanged="cmbSelectionChanged"/>
+                    <Label Grid.Row="1" Grid.Column="0" Content="Steel (ksi)"  HorizontalAlignment="Center" FontSize="20" FontWeight="Bold" FontStyle="Italic"/>
+                    <ComboBox Grid.Row="2" Grid.Column="0" Name="cmbSteelYieldStrength" Width="75" Height="25" Margin="10 0 5 5" SelectionChanged="cmbSelectionChanged"/>
 
-            <Label Grid.Row="3"  Grid.Column="0" Content="f'c"/>
-            <ComboBox Grid.Row="3" Grid.Column="1" Name="cmbConcreteCompStrength" Width="75" Height="20" SelectionChanged="cmbSelectionChanged"/>
+                    <Label Grid.Row="1"  Grid.Column="1" Content="Concrete (psi)"  HorizontalAlignment="Center" FontSize="20" FontWeight="Bold" FontStyle="Italic"/>
+                    <ComboBox Grid.Row="2" Grid.Column="1" Name="cmbConcreteCompStrength" Width="75" Height="25" Margin="10 0 5 5" SelectionChanged="cmbSelectionChanged"/>
+                </Grid>
+                
+                <!--General Details-->
+                <StackPanel Orientation="Vertical" Background="LightSkyBlue">
+                    <Label Content="General Details" Margin="0 0 0 0" FontWeight="Bold" FontSize="15"/>
+                    <Grid HorizontalAlignment="Center">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
 
-            <Label Grid.Row="4"  Grid.Column="0" Content="Epoxy Bars"/>
-            <ComboBox Grid.Row="4" Grid.Column="1" Name="cmbEpoxy" Width="75" Height="20" SelectionChanged="cmbSelectionChanged"/>
+                        <Label Grid.Row="0"  Grid.Column="0" Content="Epoxy Bars" HorizontalAlignment="Center" FontStyle="Italic"/>
+                        <ComboBox Grid.Row="1" Grid.Column="0" Name="cmbEpoxy" Width="75" Height="25" SelectionChanged="cmbSelectionChanged"/>
 
-            <Label Grid.Row="5"  Grid.Column="0" Content="Top Bars"/>
-            <ComboBox Grid.Row="5" Grid.Column="1" Name="cmbTopBars" Width="75" Height="20" SelectionChanged="cmbSelectionChanged"/>
+                        <Label Grid.Row="0"  Grid.Column="1" Content="Top Bars" HorizontalAlignment="Center" FontStyle="Italic"/>
+                        <ComboBox Grid.Row="1" Grid.Column="1" Name="cmbTopBars" Width="75" Height="25" SelectionChanged="cmbSelectionChanged"/>
 
-            <Label Grid.Row="6"  Grid.Column="0" Content="LW Concrete"/>
-            <ComboBox Grid.Row="6" Grid.Column="1" Name="cmbLightweightConcrete" Width="75" Height="20" SelectionChanged="cmbSelectionChanged"/>
+                        <Label Grid.Row="2"  Grid.Column="0" Content="Lightweight Concrete" HorizontalAlignment="Center" FontStyle="Italic"/>
+                        <ComboBox Grid.Row="3" Grid.Column="0" Name="cmbLightweightConcrete" Width="75" Height="25" SelectionChanged="cmbSelectionChanged"/>
 
-            <Canvas Grid.RowSpan ="6" Grid.Column="2" Name="MainCanvas" Width="350" Height="350" Background="LightGray"/>
-            <Button Name="btnShownACIDetailsCollapsedView" Grid.Row="0" Grid.Column="2"  Content="Show ACI Details" Click="ACIDetailsButton_Click"/>
+                        <Label Grid.Row="2" Grid.Column="1" Content="Has Min Trans Reinf?" HorizontalAlignment="Center" FontStyle="Italic"/>
+                        <ComboBox Grid.Row="3" Grid.Column="1" Name="cmbHasMinTransverseReinf" Width="75" Height="25" SelectionChanged="cmbSelectionChanged"/>
+                    </Grid>
+                </StackPanel>
 
-            <!--<StackPanel Grid.Row="7" Grid.ColumnSpan="3" Orientation="Horizontal" HorizontalAlignment="Center">
-                <TextBlock Name="tbBarSize" Text= "{Binding GetSelectedBarSizeLabel}" Width="75" Height="30" Background="red"/>
-                <TextBlock Name="tbSteelYieldStrength" Text= "{Binding GetSelectedSteelYieldStrengthLabel}" Width="75" Height="30" Background="Green"/>
-                <TextBlock Name="tbConcreteCompStrength" Text= "{Binding GetSelectedConcreteCompStrengthLabel}" Width="75" Height="30" Background="blue"/>
-            </StackPanel>-->
+                <!--Spacing and Cover Details-->
+                <StackPanel Orientation="Vertical" Margin="0 20 0 0" Background="MediumTurquoise">
+                    <Label Content="Cover and Spacing Properties" Margin="0 0 0 0" FontWeight="Bold" FontSize="15" />
+                    <Grid HorizontalAlignment="Center">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
 
-            <StackPanel Grid.Row="7"  Grid.Column="0" Grid.ColumnSpan="3" Orientation="Horizontal">
-                <Label Content="Clear Spacing"/>
-                <TextBox Name="tbClearSpacing" Text="{Binding GetClearSpacing}" Width="75" Height="20" KeyDown="OnKeyDownHandler" LostFocus="TextBoxLostFocus"/>
-                <Label Content="Side Cover"/>
-                <TextBox Name="tbSideCover" Text="{Binding GetSideCover}" Width="75" Height="20" KeyDown="OnKeyDownHandler" LostFocus="TextBoxLostFocus"/>
+                        <Label Grid.Row="0" Grid.Column="0" Content="Clear Spacing (in)" Width="150" HorizontalAlignment="Center" FontStyle="Italic"/>
+                        <TextBox Grid.Row="1" Grid.Column="0" Name="tbClearSpacing" Text="{Binding GetClearSpacing}" Margin="5 0" FontSize="15" KeyDown="OnKeyDownHandler" LostFocus="TextBoxLostFocus"
+                                 MouseDoubleClick="SelectAll_Textbox" GotKeyboardFocus="SelectAll_Textbox" PreviewMouseLeftButtonDown="SelectivelyIgnoreMouseButton"
+                                 />
+
+                        <Label Grid.Row="0" Grid.Column="1" Content="Side Cover (in)" Width="150" HorizontalAlignment="Center" FontStyle="Italic"/>
+                        <TextBox Grid.Row="1" Grid.Column="1" Name="tbSideCover" Text="{Binding GetSideCover}" Margin="5 0" FontSize="15" KeyDown="OnKeyDownHandler" LostFocus="TextBoxLostFocus"
+                                 MouseDoubleClick="SelectAll_Textbox" GotKeyboardFocus="SelectAll_Textbox" PreviewMouseLeftButtonDown="SelectivelyIgnoreMouseButton"
+                                 />
+
+                        <Label Grid.Row="0" Grid.Column="2" Content="Top/Bottom Cover (in)" Width="150" HorizontalAlignment="Center" FontStyle="Italic"/>
+                        <TextBox Grid.Row="1" Grid.Column="2" Name="tbBottomCover" Text="{Binding GetBottomCover}" Margin="5 0" FontSize="15" KeyDown="OnKeyDownHandler" LostFocus="TextBoxLostFocus"
+                                 MouseDoubleClick="SelectAll_Textbox" GotKeyboardFocus="SelectAll_Textbox" PreviewMouseLeftButtonDown="SelectivelyIgnoreMouseButton"
+                                 />
+                    </Grid>
+                </StackPanel>
             </StackPanel>
-            <StackPanel Grid.Row="8"  Grid.Column="0" Grid.ColumnSpan="3" Orientation="Horizontal">
-                <Label Content="Top/Bottom Cover"/>
-                <TextBox Name="tbBottomCover" Text="{Binding GetBottomCover}" Width="75" Height="20" KeyDown="OnKeyDownHandler" LostFocus="TextBoxLostFocus"/>
-                <Label Content="Min Transverse Reinf"/>
-                <ComboBox Name="cmbHasMinTransverseReinf" Width="75" Height="20" SelectionChanged="cmbSelectionChanged"/>
+            
+            <StackPanel Orientation="Vertical" Margin="2 0 2 0" VerticalAlignment="Center">
+                <Canvas Name="MainCanvas" Width="400" Height="400" Background="LightGray"/>
+                <Button Name="btnShownACIDetailsCollapsedView" Margin="2" Grid.Row="0" Grid.Column="2" Background="Azure" Content="Show ACI Details" FontSize="20" FontWeight="Bold" Click="ACIDetailsButton_Click"/>
             </StackPanel>
 
-            
-            <StackPanel Grid.Row="0" Grid.RowSpan="7" Grid.Column="4" Name="spDisplayFactors" Orientation="Vertical">
-                <Button Visibility="Collapsed" Name="btnShownACIDetailsExpandedView" Content="Collapse ACI Details" Click="ACIDetailsButton_Click"/>
-                <ScrollViewer Name="svDisplayFactors" Visibility="Collapsed" VerticalScrollBarVisibility="Auto" Width="400" Height="500">
+            <StackPanel Name="spDisplayFactors" Orientation="Vertical" Margin="5">
+                <ScrollViewer Name="svDisplayFactors" Visibility="Collapsed" VerticalScrollBarVisibility="Auto" Height="400" Width="400">
                     <TextBlock Name="tbFactors" Text="{Binding GetDisplayFactors}"  Background="White"/>
                 </ScrollViewer>
+                <Button Visibility="Collapsed" Name="btnShownACIDetailsExpandedView" Margin="2" Background="Azure" FontSize="20" FontWeight="Bold" Content="Collapse ACI Details" Click="ACIDetailsButton_Click"/>
             </StackPanel>
-
-        </Grid>
+        </StackPanel>
     </Border>
 </Window>

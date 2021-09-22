@@ -108,11 +108,14 @@ namespace RebarDetailsLibrary
             StatusMessageList.Add("lambda = " + Lambda.ToString() + " -- " + (LightWeightConcreteStatus ? "" : " NOT ") + "lightweight concrete");
         }
 
-        public virtual BaseDevelopmentLength Compute() { return null; }
-
-
         public virtual double DevLength() { return -1; }
 
-        public virtual string DisplayFactors() { return "in base class"; }
+        public virtual string DisplayFactors()
+        {
+            string str = "";
+            foreach (var msg in StatusMessageList)
+                str += msg + "\n";
+            return str;
+        }
     }
 }

@@ -101,6 +101,15 @@ namespace RebarDetailsLibrary
                 Console.WriteLine("   Clear spacing= " + CC_Spacing.ToString() + " : side_cover= " + SideCover.ToString() + " : top_cover=" + BottomCover.ToString());
             }
 
+            double ldh = (new double[] { LDH, 8 * BarDiameter, 6 }).Max();
+            if (LDH == ldh)
+                StatusMessageList.Add("- LDH calc controlled by eqn 25.4.3.1(a)");
+            else if (ldh == 8 * BarDiameter)
+                StatusMessageList.Add("- LDH calc controlled by 8*db per 25.4.3.1(b)");
+            else if (ldh == 6)
+                StatusMessageList.Add("- LDH calc controlled by min. 6 per 25.4.3.1(c)");
+
+            // Show the status string list
             string status_string = "";
             foreach(var item in StatusMessageList)
             {
@@ -108,7 +117,8 @@ namespace RebarDetailsLibrary
             }
             Console.WriteLine(status_string);
 
-            return Math.Ceiling(LDH);
+            // roundup the result and return;
+            return Math.Ceiling(ldh);
         }
         private void DetermineHookLengthValues()
         {

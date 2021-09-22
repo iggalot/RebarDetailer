@@ -83,8 +83,9 @@ namespace VMDiagrammer.Helpers
         /// <param name="c">the WPF canvas object</param>
         /// <param name="x">the upper left x-coordinate for a bounding box around the node</param>
         /// <param name="y">the upper left y-coordinate for a bounding box around the node</param>
+        /// <param name="diameter">the diameter of the circle</param>
         /// <returns></returns>
-        public static Shape DrawCircle(Canvas c, double x, double y, Brush fill, Brush stroke, double radius, double thickness, Linetypes ltype = Linetypes.LINETYPE_SOLID)
+        public static Shape DrawCircle(Canvas c, double x, double y, Brush fill, Brush stroke, double diameter, double thickness, Linetypes ltype = Linetypes.LINETYPE_SOLID)
         {
             // Draw circle node
             Ellipse myEllipse = new Ellipse();
@@ -93,8 +94,8 @@ namespace VMDiagrammer.Helpers
             myEllipse.StrokeThickness = 2.0;
             myEllipse.StrokeDashArray = GetStrokeDashArray(ltype);
 
-            myEllipse.Width = radius;
-            myEllipse.Height = radius;
+            myEllipse.Width = diameter;
+            myEllipse.Height = diameter;
 
             Canvas.SetLeft(myEllipse, x - myEllipse.Width / 2.0);
             Canvas.SetTop(myEllipse, y - myEllipse.Height / 2.0);
@@ -104,9 +105,9 @@ namespace VMDiagrammer.Helpers
             return myEllipse;
         }
 
-        public static Shape DrawCircleHollow(Canvas c, double x, double y, Brush stroke, double radius, double thickness=1.0, Linetypes ltype = Linetypes.LINETYPE_SOLID)
+        public static Shape DrawCircleHollow(Canvas c, double x, double y, Brush stroke, double diameter, double thickness=1.0, Linetypes ltype = Linetypes.LINETYPE_SOLID)
         {
-            return DrawCircle(c, x, y, Brushes.Transparent, stroke, radius, thickness, ltype);
+            return DrawCircle(c, x, y, Brushes.Transparent, stroke, diameter, thickness, ltype);
         }
 
         /// <summary>
@@ -149,7 +150,7 @@ namespace VMDiagrammer.Helpers
         /// <param name="end_angle">angle from center to the end of the arc (clockwise positive)/param>
         /// <param name="start_angle">angle from center to the start of the arc (clockwise positive)/param>
         /// <param name="head_len">length of the arrow head in pixels</param>
-        public static void DrawCircularArc(Canvas c, double x, double y, Brush fill, Brush stroke, double thickness, double radius, double start_angle, double end_angle)
+        public static void DrawCircularArc(Canvas c, double x, double y, Brush fill, Brush stroke, double thickness, double radius, double start_angle, double end_angle, SweepDirection sweep=SweepDirection.Counterclockwise)
         {
             double sa, ea;
 
@@ -181,11 +182,14 @@ namespace VMDiagrammer.Helpers
             // Set the start of arc
             pf.StartPoint = new System.Windows.Point(x - radius * Math.Cos(sa), y - radius * Math.Sin(sa));
 
+            // // Draws a node at the start point for reference
+            DrawingHelpers.DrawCircle(c, pf.StartPoint.X, pf.StartPoint.Y, Brushes.Pink, Brushes.Black, 0.5 * radius, 2);
+
             // Set the end point of the arc
             arcSegment.Point = new System.Windows.Point(x - radius * Math.Cos(ea), y - radius * Math.Sin(ea));
 
             arcSegment.Size = new System.Windows.Size(0.8*radius, radius);
-            arcSegment.SweepDirection = SweepDirection.Counterclockwise;
+            arcSegment.SweepDirection = sweep;
 
             pf.Segments.Add(arcSegment);
             pg.Figures.Add(pf);
