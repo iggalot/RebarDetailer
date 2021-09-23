@@ -24,7 +24,7 @@ namespace DevLengthApplication.Models
                 case DevelopmentLengthTypes.DEV_LENGTH_STRAIGHT:
                     DevelopmentLengthObject = new StraightDevelopmentLength(4, 60000, 3000, false);
                     break;
-                case DevelopmentLengthTypes.DEV_LENGTH_HOOKED:
+                case DevelopmentLengthTypes.DEV_LENGTH_STANDARD_HOOK:
                     break;
                 default:
                     break;
@@ -58,7 +58,7 @@ namespace DevLengthApplication.Models
 
                     //this.ComputeDevelopmentLength();
                     break;
-                case DevelopmentLengthTypes.DEV_LENGTH_HOOKED:
+                case DevelopmentLengthTypes.DEV_LENGTH_STANDARD_HOOK:
                     DevelopmentLengthObject = new HookDevelopmentLength(size, yield, comp, false, HookTypes.HOOK_STANDARD, 90, cc_spacing, sidecover, topbotcover, lightweight, epoxy, topbar);
 
                     break;
@@ -93,7 +93,7 @@ namespace DevLengthApplication.Models
                 if (DevelopmentLengthObject.StatusMessageList == null)
                     str += "No status messages";
                 else
-                    str += DevelopmentLengthObject.DisplayFactors();
+                    str += DevelopmentLengthObject.StatusMessagesDisplayString();
             }
             return str;
         }

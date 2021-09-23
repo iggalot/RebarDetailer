@@ -18,7 +18,7 @@ namespace DevLengthApplication.ViewModels
         ObservableCollection<int> ocBarSize = new ObservableCollection<int> { 3, 4, 5, 6, 7, 8, 9, 10, 11, 14, 18 };
         ObservableCollection<int> ocSteelYieldStrength = new ObservableCollection<int> { 40, 60, 80, 100 };
         ObservableCollection<int> ocConcreteCompStrength = new ObservableCollection<int> { 500, 1000, 1500, 2000, 2500, 3000, 3500, 4000, 4500, 5000, 5500, 6000, 6500, 7000, 7500, 10000 };
-        ObservableCollection<DevelopmentLengthTypes> ocDevelopmentLengthTypes = new ObservableCollection<DevelopmentLengthTypes> { DevelopmentLengthTypes.DEV_LENGTH_STRAIGHT, DevelopmentLengthTypes.DEV_LENGTH_HOOKED };
+        ObservableCollection<DevelopmentLengthTypes> ocDevelopmentLengthTypes = new ObservableCollection<DevelopmentLengthTypes> { DevelopmentLengthTypes.DEV_LENGTH_STRAIGHT, DevelopmentLengthTypes.DEV_LENGTH_STANDARD_HOOK };
         
         /// <summary>
         /// Our development length model basis
@@ -86,7 +86,7 @@ namespace DevLengthApplication.ViewModels
                         break;
                     case RebarDetailsLibrary.DevelopmentLengthTypes.DEV_LENGTH_STRAIGHT:
                         return (((StraightDevelopmentLength)Model.DevelopmentLengthObject).TopBarStatus);
-                    case RebarDetailsLibrary.DevelopmentLengthTypes.DEV_LENGTH_HOOKED:
+                    case RebarDetailsLibrary.DevelopmentLengthTypes.DEV_LENGTH_STANDARD_HOOK:
                         break;
                     default:
                         break;
@@ -353,6 +353,10 @@ namespace DevLengthApplication.ViewModels
             OnPropertyChanged("GetDisplayFactors");
         }
 
+        /// <summary>
+        /// Function to draw the output of the calculator onto the canvas.
+        /// </summary>
+        /// <param name="c"></param>
         public void DrawCanvas(Canvas c)
         {
             c.Children.Clear();
@@ -433,7 +437,7 @@ namespace DevLengthApplication.ViewModels
 
                             break;
                         }
-                    case DevelopmentLengthTypes.DEV_LENGTH_HOOKED:
+                    case DevelopmentLengthTypes.DEV_LENGTH_STANDARD_HOOK:
                         {
                             HookDevelopmentLength hookModel = (HookDevelopmentLength)model;
 
