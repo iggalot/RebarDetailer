@@ -1,0 +1,45 @@
+﻿<UserControl x:Class="DevLengthApplication.Views.KtrInputView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:DevLengthApplication.Views"
+             mc:Ignorable="d" 
+             >
+    <Grid Background="LightGreen">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <Label Grid.Row="0" Grid.Column="0" Content="Ktr =" FontSize="10" FontWeight="Bold" FontStyle="Italic"/>
+        <Label Grid.Row="0" Grid.Column="1" Content="{Binding GetKtr}" Width="100" FontSize="10" FontWeight="Bold" FontStyle="Italic"/>
+        <Label Grid.Row="0" Grid.Column="2" Content="{Binding GetWasComputedString}" Width="100" FontSize="10" FontWeight="Bold" FontStyle="Italic"/>
+
+
+        <Label Grid.Row="1" Grid.Column="0" Content="n =" FontSize="10" FontWeight="Bold" FontStyle="Italic"/>
+        <TextBox Grid.Row="1" Grid.Column="1" Name="tbNumBars" Text="{Binding GetN, Mode=OneWay}" Width="50" Height="15" FontSize="10" FontWeight="Bold" FontStyle="Italic"
+                   
+                   MouseDoubleClick="SelectAll_Textbox" 
+                   GotKeyboardFocus="SelectAll_Textbox" 
+                   PreviewMouseLeftButtonDown="SelectivelyIgnoreMouseButton"/>
+        
+        <Label Grid.Row="2" Grid.Column="0" Content="A_TR =" FontSize="10" FontWeight="Bold" FontStyle="Italic"/>
+        <TextBox Grid.Row="2" Grid.Column="1" Name="tbAreaTransverseSteel" Text="{Binding GetA_TR, Mode=OneWay}" Height="15" Width="50" FontSize="10" FontWeight="Bold" FontStyle="Italic"
+                  MouseDoubleClick="SelectAll_Textbox" GotKeyboardFocus="SelectAll_Textbox" PreviewMouseLeftButtonDown="SelectivelyIgnoreMouseButton"/>
+
+        <Label Grid.Row="3" Grid.Column="0" Content="s =" FontSize="10" FontWeight="Bold" FontStyle="Italic"/>
+        <TextBox Grid.Row="3" Grid.Column="1" Name="tbSpacing" Width="50" Text="{Binding GetS, Mode=OneWay}" Height="15" FontSize="10" FontWeight="Bold" FontStyle="Italic"
+                  MouseDoubleClick="SelectAll_Textbox" GotKeyboardFocus="SelectAll_Textbox" PreviewMouseLeftButtonDown="SelectivelyIgnoreMouseButton"/>
+
+        <Button Grid.Row="4" Grid.ColumnSpan="3" Content="Calculate and Close" Click="ComputeKTR_Click" FontSize="10"/>
+    </Grid>
+</UserControl>

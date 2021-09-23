@@ -160,5 +160,20 @@ namespace DevLengthApplication
             btnShownACIDetailsCollapsedView.Visibility = Visibility.Collapsed;
             svDisplayFactors.Visibility = Visibility.Visible;
         }
+
+        private void btnComputeKTR_Click(object sender, RoutedEventArgs e)
+        {
+            if (spKTRInput.Visibility == Visibility.Visible)
+            {
+                btnKTRCompute.Content = "Close";
+                spKTRInput.Visibility = Visibility.Collapsed;
+            }
+            else
+            {
+                btnKTRCompute.Content = "Minimize KTR";
+                spKTRInput.Visibility = Visibility.Visible;
+            }
+
+        }
     }
 }

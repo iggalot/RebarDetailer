@@ -36,6 +36,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
+    <Reference Include="System.Configuration" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
@@ -57,9 +58,14 @@
     </ApplicationDefinition>
     <Compile Include="Helpers\DrawingHelpers.cs" />
     <Compile Include="Models\InputModel.cs" />
+    <Compile Include="Models\KtrModel.cs" />
     <Compile Include="Models\RebarModel.cs" />
     <Compile Include="ViewModels\BaseViewModel.cs" />
     <Compile Include="ViewModels\InputViewModel.cs" />
+    <Compile Include="ViewModels\KtrViewModel.cs" />
+    <Compile Include="Views\KtrInputView.xaml.cs">
+      <DependentUpon>KtrInputView.xaml</DependentUpon>
+    </Compile>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -72,6 +78,10 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="Views\KtrInputView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs">
@@ -99,9 +109,7 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Views\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <ProjectReference Include="..\RebarDetailsLibrary\RebarDetailsLibrary.csproj">
       <Project>{62fcf263-8993-4dda-8bea-0771ab5953c0}</Project>

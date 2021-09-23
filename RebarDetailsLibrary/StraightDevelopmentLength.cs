@@ -15,6 +15,7 @@ namespace RebarDetailsLibrary
         public bool TopBarStatus { get; set; } = true;
         public bool HasMinTransverseReinf { get; set; } = false;
         public double K_TR { get; set; } = 0;
+        public bool KTR_Was_Calculated { get; set; } = false;
         public bool TransReinfProvided { get; set; } = false;
 
         public double C_B { get; set; }
@@ -49,6 +50,7 @@ namespace RebarDetailsLibrary
             double concrete_strength,
             bool DEBUG_MODE,
             double ktr = 0,
+            bool ktr_calc_status = false,
             bool tr_provided = false,
             double adj_cc_spacing = 3,
             double side_cover = 3,
@@ -73,6 +75,7 @@ namespace RebarDetailsLibrary
                 throw new InvalidOperationException("ERROR: Ktr cannot be less than zero - Ktr=" + ktr.ToString());
 
             K_TR = ktr;
+            KTR_Was_Calculated = ktr_calc_status;
             HasMinTransverseReinf = tr_provided;
             TopBarStatus = top_bar_position;
         }
@@ -103,6 +106,8 @@ namespace RebarDetailsLibrary
             // Apply the limit from ACI318-19 Table 25.4.2.5 for product of psi_e and psi_t greater than 1.7
             m_PSI_E_X_PSI_T_PRODUCT = ComputePSI_E_x_Psi_T_Product(out status_msg);
             StatusMessageList.Add(status_msg);
+
+            StatusMessageList.Add("Ktr=" + K_TR.ToString() + (KTR_Was_Calculated ? " - was computed using ACI25.4.2b" : " - conservatively assumed per ACI25.4.2b"));
 
             // Compute cb from lesser of half of clear cc spacing or side or bottom covers
             C_B = ComputeCb(out status_msg);
@@ -333,7 +338,7 @@ namespace RebarDetailsLibrary
         private double ComputeCb(out string msg)
         {
             double cb = (new double[] { CC_Spacing / 2.0, SideCover, BottomCover }).Min();
-            msg = "cb = " + C_B.ToString() + " -- ";
+            msg = "cb = " + cb.ToString() + " -- ";
             if (cb == CC_Spacing / 2.0)
             {
                 msg += "clear spacing / 2.0 controls : ";

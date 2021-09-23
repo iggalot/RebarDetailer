@@ -4,9 +4,17 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:DevLengthApplication"
+        xmlns:views="clr-namespace:DevLengthApplication.Views"
+        xmlns:vm="clr-namespace:DevLengthApplication.ViewModels"
         mc:Ignorable="d"
         Title="Development Length Calculator v1.0" Width="1400" Height="550"
         Loaded="OnWindowLoaded">
+    <Window.Resources>
+        <DataTemplate DataType="{x:Type vm:KtrViewModel}">
+            <views:KtrInputView />
+        </DataTemplate>
+    </Window.Resources>
+    
     <Border Background="Teal" Margin="10" Padding="25">
         <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Background="Green">
             <StackPanel Orientation="Vertical" HorizontalAlignment="Center" Margin="10">
@@ -95,6 +103,7 @@
                                  />
                     </Grid>
                 </StackPanel>
+
             </StackPanel>
             
             <StackPanel Orientation="Vertical" Margin="2 0 2 0" VerticalAlignment="Center">
@@ -107,6 +116,11 @@
                     <TextBlock Name="tbFactors" Text="{Binding GetDisplayFactors}"  Background="White"/>
                 </ScrollViewer>
                 <Button Visibility="Collapsed" Name="btnShownACIDetailsExpandedView" Margin="2" Background="Azure" FontSize="20" FontWeight="Bold" Content="Collapse ACI Details" Click="ACIDetailsButton_Click"/>
+            </StackPanel>
+
+            <StackPanel Height="400">
+                <Button Name="btnKTRCompute" Content="Compute KTR" Click="btnComputeKTR_Click"/>
+                <ContentControl Visibility="Collapsed" Name="spKTRInput" Content="{Binding KTR_VM}"/>
             </StackPanel>
         </StackPanel>
     </Border>

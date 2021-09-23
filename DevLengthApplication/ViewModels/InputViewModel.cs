@@ -15,6 +15,8 @@ namespace DevLengthApplication.ViewModels
 {
     public class InputViewModel : BaseViewModel
     {
+        private KtrViewModel m_KtrVM;
+
         ObservableCollection<int> ocBarSize = new ObservableCollection<int> { 3, 4, 5, 6, 7, 8, 9, 10, 11, 14, 18 };
         ObservableCollection<int> ocSteelYieldStrength = new ObservableCollection<int> { 40, 60, 80, 100 };
         ObservableCollection<int> ocConcreteCompStrength = new ObservableCollection<int> { 500, 1000, 1500, 2000, 2500, 3000, 3500, 4000, 4500, 5000, 5500, 6000, 6500, 7000, 7500, 10000 };
@@ -24,6 +26,23 @@ namespace DevLengthApplication.ViewModels
         /// Our development length model basis
         /// </summary>
         public InputModel Model { get; set; } = new InputModel();
+
+        /// <summary>
+        /// The view model for the KTR object
+        /// </summary>
+        public KtrViewModel KTR_VM { 
+            get => m_KtrVM;
+            set
+            {
+                if (value == null || m_KtrVM == value)
+                    return;
+
+                m_KtrVM = value;
+                m_KtrVM.Update();
+
+                OnPropertyChanged("KTR_VM");
+            }
+        }
 
         MainWindow MainWin { get; set; }   // reference to this window object
 
@@ -169,12 +188,20 @@ namespace DevLengthApplication.ViewModels
         /// </summary>
         public InputViewModel(RebarDetailsLibrary.DevelopmentLengthTypes type)
         {
-            Model = new InputModel(type);
+            // check if we have a ktr view model yet.  If not create a default one.
+            if(KTR_VM == null)
+                KTR_VM = new KtrViewModel();
+
+            Model = new InputModel(type, KTR_VM.Model);
         }
 
         public InputViewModel()
         {
-            Model = new InputModel(RebarDetailsLibrary.DevelopmentLengthTypes.DEV_LENGTH_UNDEFINED);
+            // check if we have a ktr view model yet.  If not create a default one.
+            if (KTR_VM == null)
+                KTR_VM = new KtrViewModel();
+
+            Model = new InputModel(RebarDetailsLibrary.DevelopmentLengthTypes.DEV_LENGTH_UNDEFINED, KTR_VM.Model);
         }
 
         /// <summary>
@@ -340,8 +367,10 @@ namespace DevLengthApplication.ViewModels
 
             bool hasmintransstatus = (MainWin.cmbLightweightConcrete.SelectedIndex == 0 ? true : false);
 
-            // Create the model
-            Model = new InputModel(devLengthType, barSize, steelYieldStrength, concreteCompStrength, epoxyStatus, topBarStatus, lightweightStatus, sidecover, bottomcover, clearspacing, hasmintransstatus, 0);
+            // remake the KTR_VM objects with existing data (in case it was changed by the user this round);
+            KTR_VM = new KtrViewModel(KTR_VM.Model.N, KTR_VM.Model.A_TR, KTR_VM.Model.S, KTR_VM.Model.wasComputed);
+                        
+            Model = new InputModel(devLengthType, barSize, steelYieldStrength, concreteCompStrength, epoxyStatus, topBarStatus, lightweightStatus, sidecover, bottomcover, clearspacing, hasmintransstatus, KTR_VM.Model);
 
             OnPropertyChanged("GetSelectedBarSizeLabel");
             OnPropertyChanged("GetSelectedSteelYieldStrengthLabel");
@@ -370,7 +399,6 @@ namespace DevLengthApplication.ViewModels
                 double width = c.ActualWidth;
                 double height = c.ActualHeight;
 
-                
                 double dim = Math.Min(width, height);
 
                 // bounding box dimensions for our graphic

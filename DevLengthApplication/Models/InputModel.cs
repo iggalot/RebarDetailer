@@ -5,24 +5,27 @@ namespace DevLengthApplication.Models
 {
     public class InputModel
     {
-
         public BaseDevelopmentLength DevelopmentLengthObject { get; set; }
+        public KtrModel Ktr_Model {get; set;} = null;
 
         public double LD {get; set;}
 
-        public InputModel() : this(DevelopmentLengthTypes.DEV_LENGTH_UNDEFINED)
+        public InputModel() : this(DevelopmentLengthTypes.DEV_LENGTH_UNDEFINED, null)
         {
+            Ktr_Model = null;
         }
 
-        public InputModel(RebarDetailsLibrary.DevelopmentLengthTypes type)
+        public InputModel(RebarDetailsLibrary.DevelopmentLengthTypes type, KtrModel ktrmodel)
         {
+            Ktr_Model = (ktrmodel == null) ? new KtrModel() : ktrmodel;
+
             switch (type)
             {
                 case DevelopmentLengthTypes.DEV_LENGTH_UNDEFINED:
                     DevelopmentLengthObject = new BaseDevelopmentLength();
                     break;
                 case DevelopmentLengthTypes.DEV_LENGTH_STRAIGHT:
-                    DevelopmentLengthObject = new StraightDevelopmentLength(4, 60000, 3000, false);
+                    DevelopmentLengthObject = new StraightDevelopmentLength(4, 60000, 3000, false, ktrmodel.ComputeKtr());
                     break;
                 case DevelopmentLengthTypes.DEV_LENGTH_STANDARD_HOOK:
                     break;
@@ -47,14 +50,16 @@ namespace DevLengthApplication.Models
         /// <param name="cc_spacing">smallest center to center spacing between bars</param>
         /// <param name="has_mintransversereinf">will transverse reinforcement be provided</param>
         /// <param name="ktr">ktr calculation, assumed to be zero</param>
-        public InputModel(DevelopmentLengthTypes type, int size, double yield, double comp, bool epoxy, bool topbar, bool lightweight, double sidecover, double topbotcover, double cc_spacing, bool has_mintransversereinf, double ktr)
+        public InputModel(DevelopmentLengthTypes type, int size, double yield, double comp, bool epoxy, bool topbar, bool lightweight, double sidecover, double topbotcover, double cc_spacing, bool has_mintransversereinf, KtrModel ktr_model)
         {
+            Ktr_Model = ktr_model == null ? new KtrModel() : ktr_model;
+
             switch (type)
             {
                 case DevelopmentLengthTypes.DEV_LENGTH_UNDEFINED:
                     break;
                 case DevelopmentLengthTypes.DEV_LENGTH_STRAIGHT:
-                    DevelopmentLengthObject = new StraightDevelopmentLength(size, yield, comp, false, ktr, has_mintransversereinf, cc_spacing, sidecover, topbotcover, lightweight, epoxy, topbar);
+                    DevelopmentLengthObject = new StraightDevelopmentLength(size, yield, comp, false, Ktr_Model.ComputeKtr(), Ktr_Model.wasComputed, has_mintransversereinf, cc_spacing, sidecover, topbotcover, lightweight, epoxy, topbar);
 
                     //this.ComputeDevelopmentLength();
                     break;

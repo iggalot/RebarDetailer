@@ -100,7 +100,7 @@ namespace RebarDetailsLibrary
         /// Computes the development length parameters for hooked bars.
         /// </summary>
         /// <returns></returns>
-        private double HookLength()
+        public double HookLength()
         {
             string status_msg = "";
             StatusMessageList.Add("   HookType: " + HookType + "  BendAngle: " + BendAngle.ToString());
