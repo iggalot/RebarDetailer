@@ -36,7 +36,7 @@ namespace RebarDetailsLibrary
         /// <param name="steel_strength">yield strength of the rebar</param>
         /// <param name="concrete_strength">compressive strength of concrete</param>
         /// <param name="DEBUG_MODE">should we display DEBUG parameters to console</param>
-        /// <param name="ktr">K_TR parameter per ACI25.4.2.4(b) -- conservatively taken as 0</param>
+        /// <param name="ktr">K_TR parameter per ACI 25.4.2.4(b) -- conservatively taken as 0</param>
         /// <param name="tr_provided">is minimum transverse reinforcmeent provided</param>
         /// <param name="adj_cc_spacing">center to center spacing of bars being developed</param>
         /// <param name="side_cover">side cover distance</param>
@@ -107,7 +107,7 @@ namespace RebarDetailsLibrary
             m_PSI_E_X_PSI_T_PRODUCT = ComputePSI_E_x_Psi_T_Product(out status_msg);
             StatusMessageList.Add(status_msg);
 
-            StatusMessageList.Add("Ktr=" + K_TR.ToString() + (KTR_Was_Calculated ? " - was computed using ACI25.4.2b" : " - conservatively assumed per ACI25.4.2b"));
+            StatusMessageList.Add("Ktr=" + K_TR.ToString() + (KTR_Was_Calculated ? " - was computed using ACI 25.4.2.4b" : " - conservatively assumed per ACI 25.4.2b"));
 
             // Compute cb from lesser of half of clear cc spacing or side or bottom covers
             C_B = ComputeCb(out status_msg);
@@ -365,11 +365,11 @@ namespace RebarDetailsLibrary
         {
             if (((C_B + K_TR) / BarDiameter) > 2.5)
             {
-                msg = "(cb + Ktr) / db factor exceeds limit of 2.5 from ACI318-19 25.4.2.4";
+                msg = "(cb + Ktr) / db = 2.5 -- computed as " + ((C_B + K_TR) / BarDiameter).ToString() + " which exceeds limit of 2.5 from ACI318-19 25.4.2.4";
                 return 2.5;
             } else
             {
-                msg = "(cb + Ktr) / db limit is less than 2.5 from ACI318-19 25.4.2.4";
+                msg = "(cb + Ktr) / db is " + ((C_B + K_TR) / BarDiameter).ToString() +" per ACI318-19 25.4.2.4";
                 return (C_B + K_TR) / BarDiameter;
             }
         }

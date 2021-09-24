@@ -56,7 +56,6 @@ namespace DevLengthApplication
             {
                 InputVM.Update();
                 ShowACIDetails();
-                DrawingHelpers.DrawLine(MainCanvas, 0, 0, 400, 400, Brushes.Red, 1);
                 InputVM.DrawCanvas(MainCanvas);
             }
         }
@@ -161,21 +160,82 @@ namespace DevLengthApplication
             svDisplayFactors.Visibility = Visibility.Visible;
         }
 
+        protected void CollapseKtrDetails()
+        {
+            btnShowKTRInput.Visibility = Visibility.Visible;
+            spKTRInput.Visibility = Visibility.Collapsed;
+        }
+
+        private void btnCancelKTR_Click(object sender, RoutedEventArgs e)
+        {
+            CollapseKtrDetails();
+        }
+
         private void btnComputeKTR_Click(object sender, RoutedEventArgs e)
+        {
+            int numbars;
+            double atr, spa;
+            bool iscalculated = false;
+            bool num_bars_valid = true;
+            bool atr_valid = true;
+            bool spacing_valid = true;
+            bool inputIsValid = true;
+           
+
+            if(!int.TryParse(tbNumBars.Text, out numbars))
+            {
+                inputIsValid = false;
+            }
+
+            if (!double.TryParse(tbKTRAreaTransverseSteel.Text, out atr))
+            {
+                inputIsValid = false;
+            }
+
+            if (!double.TryParse(tbKTRSpacing.Text, out spa))
+            {
+                inputIsValid = false;
+            }
+
+            if (inputIsValid)
+            {
+                if (numbars < 0)
+                {
+                    num_bars_valid = false;
+                }
+                lblNumBarStatus.Content = (num_bars_valid ? "" : "cannot be less than zero");
+
+                if (atr < 0)
+                {
+                    atr_valid = false;
+                }
+                lblATRStatus.Content = (atr_valid ? "" : "cannot be less than zero");
+
+                if (spa < 0)
+                {
+                    spacing_valid = false;
+                }
+                lblKTRSpacingStatus.Content = (spacing_valid ? "" : "cannot be less than zero");
+
+                // Make a new model for the KTR data
+                if (InputVM.KTR_VM.Model.IsDefault() || (num_bars_valid && atr_valid && spacing_valid))
+                {
+                    InputVM.KTR_VM = new KtrViewModel(numbars, atr, spa, iscalculated);
+                    InputVM.Update();
+
+                    CollapseKtrDetails();
+                }
+            }
+
+        }
+
+        private void btnShowKTRInput_Click(object sender, RoutedEventArgs e)
         {
             // Hide the ACI details block
             CollapseACIDetails();
 
-            if (spKTRInput.Visibility == Visibility.Visible)
-            {
-                btnKTRCompute.Content = "Close";
-                spKTRInput.Visibility = Visibility.Collapsed;
-            }
-            else
-            {
-                btnKTRCompute.Content = "Minimize KTR";
-                spKTRInput.Visibility = Visibility.Visible;
-            }
+            btnShowKTRInput.Visibility = Visibility.Collapsed;
+            spKTRInput.Visibility = Visibility.Visible;
 
         }
     }

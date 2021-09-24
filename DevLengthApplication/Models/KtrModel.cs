@@ -49,6 +49,7 @@ namespace DevLengthApplication.Models
             }
             else
             {
+                wasComputed = false;
                 // return conservative default
                 return 0;
             }
@@ -56,7 +57,7 @@ namespace DevLengthApplication.Models
 
         public bool IsDefault()
         {
-            bool result = ((A_TR == DEFAULT_ATR) && (N == DEFAULT_N) && (S == DEFAULT_S) && (wasComputed == DEFAULT_WASCOMPUTED) && (KTR == DEFAULT_KTR));
+            bool result = ((A_TR == DEFAULT_ATR) && (N == DEFAULT_N) && (S == DEFAULT_S));
             return result;
         }
     }

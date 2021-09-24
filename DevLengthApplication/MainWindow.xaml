@@ -4,16 +4,15 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:DevLengthApplication"
-        xmlns:views="clr-namespace:DevLengthApplication.Views"
         xmlns:vm="clr-namespace:DevLengthApplication.ViewModels"
         mc:Ignorable="d"
-        Title="Development Length Calculator v1.0" Width="1400" Height="550"
+        Title="Development Length Calculator v1.01" Width="1400" Height="550"
         Loaded="OnWindowLoaded">
-    <Window.Resources>
+    <!--<Window.Resources>
         <DataTemplate DataType="{x:Type vm:KtrViewModel}">
             <views:KtrInputView />
         </DataTemplate>
-    </Window.Resources>
+    </Window.Resources>-->
     
     <Border Background="Teal" Margin="10" Padding="25">
         <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Background="Green">
@@ -75,7 +74,8 @@
                         <ComboBox Grid.Row="3" Grid.Column="1" Name="cmbHasMinTransverseReinf" Width="75" Height="25" SelectionChanged="cmbSelectionChanged"/>
 
                         <Label Grid.Row="2" Grid.Column="2" Content="{Binding KTR_VM.GetKtrString}" HorizontalAlignment="Center" FontStyle="Italic"/>
-                        <Button Grid.Row="3" Grid.Column="2" Name="btnKTRCompute" Content="Compute KTR" Click="btnComputeKTR_Click" Foreground="White" Background="CadetBlue"/>
+                        
+                        <Button Grid.Row="3" Grid.Column="2" Name="btnShowKTRInput" Content="Compute KTR" Click="btnShowKTRInput_Click" Foreground="White" Background="CadetBlue"/>
                     </Grid>
                 </StackPanel>
 
@@ -112,11 +112,55 @@
 
                     </Grid>
                 </StackPanel>
-
             </StackPanel>
 
-            <StackPanel VerticalAlignment="Center">
-                <ContentControl Visibility="Collapsed" x:Name="spKTRInput" Content="{Binding KTR_VM}"/>
+            <!--KTR Input panel-->
+            <StackPanel Visibility="Collapsed" x:Name="spKTRInput" VerticalAlignment="Center">
+                <Grid Background="LightGreen">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+
+                    <Label Grid.Row="0" Grid.Column="0" Content="Ktr =" FontSize="10" FontWeight="Bold" FontStyle="Italic"/>
+                    <Label Grid.Row="0" Grid.Column="1" Content="{Binding KTR_VM.GetKtr}" Width="100" FontSize="10" FontWeight="Bold" FontStyle="Italic"/>
+                    <Label Grid.Row="0" Grid.Column="2" Content="{Binding KTR_VM.GetWasComputedString}" Width="100" FontSize="10" FontWeight="Bold" FontStyle="Italic"/>
+
+
+                    <Label Grid.Row="1" Grid.Column="0" Content="n =" FontSize="10" FontWeight="Bold" FontStyle="Italic"/>
+                    <TextBox Grid.Row="1" Grid.Column="1" x:Name="tbNumBars" Text="{Binding KTR_VM.GetN, Mode=OneWay}" Width="50" Height="15" FontSize="10" FontWeight="Bold" FontStyle="Italic"
+                             MouseDoubleClick="SelectAll_Textbox" 
+                             GotKeyboardFocus="SelectAll_Textbox" 
+                             PreviewMouseLeftButtonDown="SelectivelyIgnoreMouseButton"/>
+                    <Label Grid.Row="1" Grid.Column="2" Name="lblNumBarStatus" FontSize="10" FontWeight="Bold" FontStyle="Italic"/>
+
+
+                    <Label Grid.Row="2" Grid.Column="0" Content="A_TR =" FontSize="10" FontWeight="Bold" FontStyle="Italic"/>
+                    <TextBox Grid.Row="2" Grid.Column="1" x:Name="tbKTRAreaTransverseSteel" Text="{Binding KTR_VM.GetA_TR, Mode=OneWay}" Height="15" Width="50" FontSize="10" FontWeight="Bold" FontStyle="Italic"
+                             MouseDoubleClick="SelectAll_Textbox" GotKeyboardFocus="SelectAll_Textbox" PreviewMouseLeftButtonDown="SelectivelyIgnoreMouseButton"/>
+                    <Label Grid.Row="2" Grid.Column="2" Name="lblATRStatus" FontSize="10" FontWeight="Bold" FontStyle="Italic"/>
+
+
+                    <Label Grid.Row="3" Grid.Column="0" Content="s =" FontSize="10" FontWeight="Bold" FontStyle="Italic"/>
+                    <TextBox Grid.Row="3" Grid.Column="1" x:Name="tbKTRSpacing" Width="50" Text="{Binding KTR_VM.GetS, Mode=OneWay}" Height="15" FontSize="10" FontWeight="Bold" FontStyle="Italic"
+                             MouseDoubleClick="SelectAll_Textbox" GotKeyboardFocus="SelectAll_Textbox" PreviewMouseLeftButtonDown="SelectivelyIgnoreMouseButton"/>
+                    <Label Grid.Row="3" Grid.Column="2" Name="lblKTRSpacingStatus" FontSize="10" FontWeight="Bold" FontStyle="Italic"/>
+
+                    <StackPanel Grid.Row="4" Grid.ColumnSpan="3" Orientation="Horizontal" HorizontalAlignment="Center">
+                        <Button Grid.Row="4" Grid.Column="1" Name="btnCancelKTR" Content="Cancel" Width="75" Margin="5" Click="btnCancelKTR_Click" Foreground="White" Background="CadetBlue" FontSize="15"/>
+                        <Button Grid.Row="4" Grid.Column="3" Name="btnComputeKTR" Content="Accept"  Width="75" Margin="5" Click="btnComputeKTR_Click" Foreground="White" Background="CadetBlue" FontSize="15"/>
+
+                    </StackPanel>
+                </Grid>
+                <!--<ContentControl Visibility="Collapsed" x:Name="spKTRInput" Content="{Binding KTR_VM}"/>-->
             </StackPanel>
             
             <StackPanel Orientation="Vertical" Margin="2 0 2 0" VerticalAlignment="Center">
