@@ -183,6 +183,25 @@ namespace DevLengthApplication.ViewModels
             }
         }
 
+        public bool GetTerminatesInColumnStatus
+        {
+            get
+            {
+                switch (Model.DevelopmentLengthObject.DevLengthType)
+                {
+                    case RebarDetailsLibrary.DevelopmentLengthTypes.DEV_LENGTH_UNDEFINED:
+                        break;
+                    case RebarDetailsLibrary.DevelopmentLengthTypes.DEV_LENGTH_STRAIGHT:
+                        break;
+                    case RebarDetailsLibrary.DevelopmentLengthTypes.DEV_LENGTH_STANDARD_HOOK:
+                        return (((HookDevelopmentLength)Model.DevelopmentLengthObject).TerminateInsideColumnStatus);
+                    default:
+                        break;
+                }
+                return true;
+            }
+        }
+
         /// <summary>
         /// Default constructor
         /// </summary>
@@ -296,6 +315,14 @@ namespace DevLengthApplication.ViewModels
             // Set the default bar type to the first item (straight bars)
             //window.cmbDevelopmentBarType.SelectedItem = window.cmbDevelopmentBarType.Items[0];
             window.cmbDevelopmentBarType.FontSize = 15;
+
+            // Create the terminates in column drop down
+            ComboBoxItem cbi9 = new ComboBoxItem() { Content = "YES" };
+            window.cmbTerminatesInColumn.Items.Add(cbi9);
+            cbi9 = new ComboBoxItem() { Content = "NO" };
+            window.cmbTerminatesInColumn.Items.Add(cbi9);
+            window.cmbTerminatesInColumn.SelectedItem = window.cmbTerminatesInColumn.Items[1];
+
         }
 
         /// <summary>
@@ -311,7 +338,8 @@ namespace DevLengthApplication.ViewModels
                 (MainWin.cmbEpoxy.SelectedIndex == -1) ||
                 (MainWin.cmbTopBars.SelectedIndex == -1) ||
                 (MainWin.cmbHasMinTransverseReinf.SelectedIndex == -1) ||
-                (MainWin.cmbDevelopmentBarType.SelectedIndex == -1))
+                (MainWin.cmbDevelopmentBarType.SelectedIndex == -1) ||
+                (MainWin.cmbTerminatesInColumn.SelectedIndex == -1))
             {
                 modelIsValid = false;
             }
@@ -330,6 +358,7 @@ namespace DevLengthApplication.ViewModels
             bool epoxyStatus = (MainWin.cmbEpoxy.SelectedIndex == 0 ? true : false);
             bool topBarStatus = (MainWin.cmbTopBars.SelectedIndex == 0 ? true : false);
             bool lightweightStatus = (MainWin.cmbLightweightConcrete.SelectedIndex == 0 ? true : false);
+            bool terminateInColumnStatus = (MainWin.cmbTerminatesInColumn.SelectedIndex == 0) ? true : false;
 
             double sidecover, bottomcover, clearspacing;
 
@@ -370,7 +399,7 @@ namespace DevLengthApplication.ViewModels
             // remake the KTR_VM objects with existing data (in case it was changed by the user this round);
             KTR_VM = new KtrViewModel(KTR_VM.Model.N, KTR_VM.Model.A_TR, KTR_VM.Model.S, KTR_VM.Model.wasComputed);
                         
-            Model = new InputModel(devLengthType, barSize, steelYieldStrength, concreteCompStrength, epoxyStatus, topBarStatus, lightweightStatus, sidecover, bottomcover, clearspacing, hasmintransstatus, KTR_VM.Model);
+            Model = new InputModel(devLengthType, barSize, steelYieldStrength, concreteCompStrength, epoxyStatus, topBarStatus, lightweightStatus, sidecover, bottomcover, clearspacing, hasmintransstatus, KTR_VM.Model, terminateInColumnStatus);
 
             OnPropertyChanged("GetSelectedBarSizeLabel");
             OnPropertyChanged("GetSelectedSteelYieldStrengthLabel");
@@ -380,6 +409,7 @@ namespace DevLengthApplication.ViewModels
             OnPropertyChanged("GetTopBarStatus");
             OnPropertyChanged("GetLightweightConcreteStatus");
             OnPropertyChanged("GetDisplayFactors");
+            OnPropertyChanged("GetTerminatesInColumnStatus");
         }
 
         /// <summary>

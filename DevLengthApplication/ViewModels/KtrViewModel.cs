@@ -1,4 +1,5 @@
 ﻿using DevLengthApplication.Models;
+using DevLengthApplication.Views;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,12 +17,10 @@ namespace DevLengthApplication.ViewModels
             get => m_KTRModel;
             set
             {
-                m_KTRModel = value;
+                if(value != null)
+                    m_KTRModel = value;
 
-                OnPropertyChanged("GetA_TR");
-                OnPropertyChanged("GetN");
-                OnPropertyChanged("GetS");
-                OnPropertyChanged("GetKtr");
+                Update();
             }
         }
 
@@ -66,6 +65,29 @@ namespace DevLengthApplication.ViewModels
             }
         }
 
+        public string GetKtrString
+        {
+            get
+            {
+                string str = "";
+
+                if (Model != null)
+                {
+                    if (Model.wasComputed)
+                    {
+                        str += "Computed ";
+                    }
+                    else
+                    {
+                        str += "Assumed ";
+                   }
+                }
+                str += "KTR =" + Model.ComputeKtr().ToString();
+
+                return str;
+            }
+        }
+
         public string GetWasComputedString
         {
             get
@@ -83,11 +105,22 @@ namespace DevLengthApplication.ViewModels
 
         internal void Update()
         {
+            //bool bValidInput = true;
+            //int numbars = 0;
+            //string parseMessage = "";
+            //if (!Int32.TryParse(MainWindow.spKTRInput.tbNumBars.Text, out numbars))
+            //{
+            //    bValidInput = false;
+            //    parseMessage += "Side Cover must be a valid double\n";
+            //}
+
+
             OnPropertyChanged("GetWasComputedString");
             OnPropertyChanged("GetN");
             OnPropertyChanged("GetS");
             OnPropertyChanged("GetA_TR");
             OnPropertyChanged("GetKtr");
+            OnPropertyChanged("GetKtrString");
         }
 
         public KtrViewModel()

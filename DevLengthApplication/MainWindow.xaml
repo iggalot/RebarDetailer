@@ -43,12 +43,14 @@
                 </Grid>
                 
                 <!--General Details-->
-                <StackPanel Orientation="Vertical" Background="LightSkyBlue">
-                    <Label Content="General Details" Margin="0 0 0 0" FontWeight="Bold" FontSize="15"/>
+                <StackPanel Orientation="Vertical" Background="LightSkyBlue" Width="400">
+                    <Label Content="General Details" FontWeight="Bold" FontSize="15"/>
                     <Grid HorizontalAlignment="Center">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*"/>
                             <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+
                         </Grid.ColumnDefinitions>
                         <Grid.RowDefinitions>
                             <RowDefinition Height="*"/>
@@ -63,17 +65,23 @@
                         <Label Grid.Row="0"  Grid.Column="1" Content="Top Bars" HorizontalAlignment="Center" FontStyle="Italic"/>
                         <ComboBox Grid.Row="1" Grid.Column="1" Name="cmbTopBars" Width="75" Height="25" SelectionChanged="cmbSelectionChanged"/>
 
-                        <Label Grid.Row="2"  Grid.Column="0" Content="Lightweight Concrete" HorizontalAlignment="Center" FontStyle="Italic"/>
-                        <ComboBox Grid.Row="3" Grid.Column="0" Name="cmbLightweightConcrete" Width="75" Height="25" SelectionChanged="cmbSelectionChanged"/>
+                        <Label Grid.Row="0"  Grid.Column="2" Content="Lightweight Concrete" HorizontalAlignment="Center" FontStyle="Italic"/>
+                        <ComboBox Grid.Row="1" Grid.Column="2" Name="cmbLightweightConcrete" Width="75" Height="25" SelectionChanged="cmbSelectionChanged"/>
+
+                        <Label Grid.Row="2"  Grid.Column="0" Content="Column Termination" HorizontalAlignment="Center" FontStyle="Italic"/>
+                        <ComboBox Grid.Row="3" Grid.Column="0" Name="cmbTerminatesInColumn" Width="75" Height="25" SelectionChanged="cmbSelectionChanged"/>
 
                         <Label Grid.Row="2" Grid.Column="1" Content="Has Min Trans Reinf?" HorizontalAlignment="Center" FontStyle="Italic"/>
                         <ComboBox Grid.Row="3" Grid.Column="1" Name="cmbHasMinTransverseReinf" Width="75" Height="25" SelectionChanged="cmbSelectionChanged"/>
+
+                        <Label Grid.Row="2" Grid.Column="2" Content="{Binding KTR_VM.GetKtrString}" HorizontalAlignment="Center" FontStyle="Italic"/>
+                        <Button Grid.Row="3" Grid.Column="2" Name="btnKTRCompute" Content="Compute KTR" Click="btnComputeKTR_Click" Foreground="White" Background="CadetBlue"/>
                     </Grid>
                 </StackPanel>
 
                 <!--Spacing and Cover Details-->
-                <StackPanel Orientation="Vertical" Margin="0 20 0 0" Background="MediumTurquoise">
-                    <Label Content="Cover and Spacing Properties" Margin="0 0 0 0" FontWeight="Bold" FontSize="15" />
+                <StackPanel Orientation="Vertical" Margin="0 20 0 0" Background="MediumTurquoise" Width="400">
+                    <Label Content="Cover and Spacing Properties" FontWeight="Bold" FontSize="15" />
                     <Grid HorizontalAlignment="Center">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*"/>
@@ -87,23 +95,28 @@
                             <RowDefinition Height="*"/>
                         </Grid.RowDefinitions>
 
-                        <Label Grid.Row="0" Grid.Column="0" Content="Clear Spacing (in)" Width="150" HorizontalAlignment="Center" FontStyle="Italic"/>
-                        <TextBox Grid.Row="1" Grid.Column="0" Name="tbClearSpacing" Text="{Binding GetClearSpacing}" Margin="5 0" FontSize="15" KeyDown="OnKeyDownHandler" LostFocus="TextBoxLostFocus"
+                        <Label Grid.Row="0" Grid.Column="0" Content="Clear Spacing (in)" Width="110" HorizontalAlignment="Center" Margin="10 0" FontStyle="Italic"/>
+                        <TextBox Grid.Row="1" Grid.Column="0" Name="tbClearSpacing" Text="{Binding GetClearSpacing}" Margin="10 0" FontSize="15" KeyDown="OnKeyDownHandler" LostFocus="TextBoxLostFocus"
                                  MouseDoubleClick="SelectAll_Textbox" GotKeyboardFocus="SelectAll_Textbox" PreviewMouseLeftButtonDown="SelectivelyIgnoreMouseButton"
                                  />
 
-                        <Label Grid.Row="0" Grid.Column="1" Content="Side Cover (in)" Width="150" HorizontalAlignment="Center" FontStyle="Italic"/>
-                        <TextBox Grid.Row="1" Grid.Column="1" Name="tbSideCover" Text="{Binding GetSideCover}" Margin="5 0" FontSize="15" KeyDown="OnKeyDownHandler" LostFocus="TextBoxLostFocus"
+                        <Label Grid.Row="0" Grid.Column="1" Content="Side Cover (in)" Width="110" HorizontalAlignment="Center" Margin="10 0" FontStyle="Italic"/>
+                        <TextBox Grid.Row="1" Grid.Column="1" Name="tbSideCover" Text="{Binding GetSideCover}" Margin="10 0" FontSize="15" KeyDown="OnKeyDownHandler" LostFocus="TextBoxLostFocus"
                                  MouseDoubleClick="SelectAll_Textbox" GotKeyboardFocus="SelectAll_Textbox" PreviewMouseLeftButtonDown="SelectivelyIgnoreMouseButton"
                                  />
 
-                        <Label Grid.Row="0" Grid.Column="2" Content="Top/Bottom Cover (in)" Width="150" HorizontalAlignment="Center" FontStyle="Italic"/>
-                        <TextBox Grid.Row="1" Grid.Column="2" Name="tbBottomCover" Text="{Binding GetBottomCover}" Margin="5 0" FontSize="15" KeyDown="OnKeyDownHandler" LostFocus="TextBoxLostFocus"
+                        <Label Grid.Row="0" Grid.Column="2" Content="Top/Bot Cover (in)" Width="110" HorizontalAlignment="Center" Margin="10 0" FontStyle="Italic"/>
+                        <TextBox Grid.Row="1" Grid.Column="2" Name="tbBottomCover" Text="{Binding GetBottomCover}" Margin="10 0" FontSize="15" KeyDown="OnKeyDownHandler" LostFocus="TextBoxLostFocus"
                                  MouseDoubleClick="SelectAll_Textbox" GotKeyboardFocus="SelectAll_Textbox" PreviewMouseLeftButtonDown="SelectivelyIgnoreMouseButton"
                                  />
+
                     </Grid>
                 </StackPanel>
 
+            </StackPanel>
+
+            <StackPanel VerticalAlignment="Center">
+                <ContentControl Visibility="Collapsed" x:Name="spKTRInput" Content="{Binding KTR_VM}"/>
             </StackPanel>
             
             <StackPanel Orientation="Vertical" Margin="2 0 2 0" VerticalAlignment="Center">
@@ -118,10 +131,7 @@
                 <Button Visibility="Collapsed" Name="btnShownACIDetailsExpandedView" Margin="2" Background="Azure" FontSize="20" FontWeight="Bold" Content="Collapse ACI Details" Click="ACIDetailsButton_Click"/>
             </StackPanel>
 
-            <StackPanel Height="400">
-                <Button Name="btnKTRCompute" Content="Compute KTR" Click="btnComputeKTR_Click"/>
-                <ContentControl Visibility="Collapsed" Name="spKTRInput" Content="{Binding KTR_VM}"/>
-            </StackPanel>
+
         </StackPanel>
     </Border>
 </Window>

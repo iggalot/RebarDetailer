@@ -50,7 +50,7 @@ namespace DevLengthApplication.Models
         /// <param name="cc_spacing">smallest center to center spacing between bars</param>
         /// <param name="has_mintransversereinf">will transverse reinforcement be provided</param>
         /// <param name="ktr">ktr calculation, assumed to be zero</param>
-        public InputModel(DevelopmentLengthTypes type, int size, double yield, double comp, bool epoxy, bool topbar, bool lightweight, double sidecover, double topbotcover, double cc_spacing, bool has_mintransversereinf, KtrModel ktr_model)
+        public InputModel(DevelopmentLengthTypes type, int size, double yield, double comp, bool epoxy, bool topbar, bool lightweight, double sidecover, double topbotcover, double cc_spacing, bool has_mintransversereinf, KtrModel ktr_model, bool terminate_in_column)
         {
             Ktr_Model = ktr_model == null ? new KtrModel() : ktr_model;
 
@@ -64,7 +64,7 @@ namespace DevLengthApplication.Models
                     //this.ComputeDevelopmentLength();
                     break;
                 case DevelopmentLengthTypes.DEV_LENGTH_STANDARD_HOOK:
-                    DevelopmentLengthObject = new HookDevelopmentLength(size, yield, comp, false, HookTypes.HOOK_STANDARD, 90, cc_spacing, sidecover, topbotcover, lightweight, epoxy, topbar);
+                    DevelopmentLengthObject = new HookDevelopmentLength(size, yield, comp, false, HookTypes.HOOK_STANDARD, 90, cc_spacing, sidecover, topbotcover, lightweight, epoxy, terminate_in_column);
 
                     break;
                 default:

@@ -25,6 +25,7 @@ namespace DevLengthApplication.Views
         {
             InitializeComponent();
 
+            DataContext = this;
             //DataContext = new KtrViewModel();
         }
 
@@ -52,7 +53,10 @@ namespace DevLengthApplication.Views
 
         private void ComputeKTR_Click(object sender, RoutedEventArgs e)
         {
-
+            MessageBox.Show("Do calculation here");
+            this.Visibility = Visibility.Collapsed;
         }
+
+       
     }
 }

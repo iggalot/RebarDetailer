@@ -8,6 +8,7 @@ namespace DevLengthApplication.Models
 {
     public class KtrModel
     {
+        public const double DEFAULT_KTR = 0;
         public const double DEFAULT_ATR = 0;
         public const int DEFAULT_N = -1;
         public const double DEFAULT_S = -1;
@@ -17,6 +18,11 @@ namespace DevLengthApplication.Models
         public double A_TR { get; set; } = DEFAULT_ATR;
         public int N { get; set; } = DEFAULT_N;
         public double S { get; set; } = DEFAULT_S;
+
+        public double KTR { 
+            get; 
+            set; 
+        } = DEFAULT_KTR;
 
         public KtrModel(int n, double atr, double s, bool computed_status = false)
         {
@@ -50,7 +56,7 @@ namespace DevLengthApplication.Models
 
         public bool IsDefault()
         {
-            bool result = ((A_TR == DEFAULT_ATR) && (N == DEFAULT_N) && (S == DEFAULT_S) && (wasComputed == DEFAULT_WASCOMPUTED));
+            bool result = ((A_TR == DEFAULT_ATR) && (N == DEFAULT_N) && (S == DEFAULT_S) && (wasComputed == DEFAULT_WASCOMPUTED) && (KTR == DEFAULT_KTR));
             return result;
         }
     }

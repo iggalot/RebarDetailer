@@ -163,6 +163,9 @@ namespace DevLengthApplication
 
         private void btnComputeKTR_Click(object sender, RoutedEventArgs e)
         {
+            // Hide the ACI details block
+            CollapseACIDetails();
+
             if (spKTRInput.Visibility == Visibility.Visible)
             {
                 btnKTRCompute.Content = "Close";
