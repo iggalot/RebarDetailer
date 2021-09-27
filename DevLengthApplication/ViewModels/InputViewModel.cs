@@ -566,17 +566,17 @@ namespace DevLengthApplication.ViewModels
 
                             // Draw the Bend diameter circle (blue dashed) and arrow and label
                             DrawingHelpers.DrawCircle(c, ldh2_x, lext1_y, Brushes.Transparent, Brushes.Blue, hookModel.BendDia * scale_factor, 1, Linetypes.LINETYPE_DASHED); ;
+
                             // Draw arrow and bar size
                             DrawingHelpers.DrawArrowUp(c, ldh2_x, lext1_y + 0.5 * hookModel.BendDia * scale_factor, Brushes.Blue, Brushes.Blue, 2, 0.13 * height, 0.035 * height);
-                            DrawingHelpers.DrawText(c, ldh2_x - 35, lext1_y + 0.5 * hookModel.BendDia * scale_factor + 0.15 * height, 0, "Dia.=" + hookModel.BarSize.ToString() + "in.", Brushes.Blue, 15);
+                            DrawingHelpers.DrawText(c, ldh2_x - 35, lext1_y + 0.5 * hookModel.BendDia * scale_factor + 0.15 * height, 0, "Dia.=" + hookModel.BendDia.ToString() + "in.", Brushes.Blue, 15);
 
                             // Draw dimensions for LDH
                             DrawingHelpers.DrawHorizontalDimension_Above(c, 0.05 * bb_height, 0.05, 10, ldh1_x, ldh1_y, ldh2_x, ldh2_y, "Ldh: " + hookModel.DevLength().ToString() + "in.", Linetypes.LINETYPE_PHANTOM);
 
-                            //DrawingHelpers.DrawLine(c, ldh1_x, ldh1_y - 10, ldh1_x, 0.02 * height, Brushes.Green, 1, Linetypes.LINETYPE_PHANTOM);
-                            //DrawingHelpers.DrawLine(c, lext1_x + 0.5*line_thick, lext1_y - 30, lext1_x + 0.5*line_thick, 0.02 * height, Brushes.Green, 1, Linetypes.LINETYPE_PHANTOM);
-                            //DrawingHelpers.DrawLine(c, ldh1_x, 0.03 * height, lext1_x + 0.5*line_thick, 0.03 * height, Brushes.Green, 1, Linetypes.LINETYPE_PHANTOM);
-                            //DrawingHelpers.DrawText(c, 0.5 * (ldh1_x + ldh2_x), 0.03 * height, 0, "Ldh: " + hookModel.DevLength().ToString() + "in.", Brushes.Green, 15);
+                            // Draw dimensions for L_EXT
+                            DrawingHelpers.DrawHorizontalDimension_Above(c, 0.05 * bb_height, 0.05, 10, ldh2_x, ldh2_y, lext1_x, lext2_y, (hookModel.BendDia / 2.0).ToString() + "in.", Linetypes.LINETYPE_PHANTOM);
+
 
                             // Draw dimensions for L_EXT
                             DrawingHelpers.DrawVerticalDimension_Right(c, 0.1 * bb_height, 0.3, 10, lext1_x, lext1_y, lext2_x, lext2_y, "Lext: \n" + hookModel.L_EXT.ToString() + "in.", Linetypes.LINETYPE_PHANTOM);
