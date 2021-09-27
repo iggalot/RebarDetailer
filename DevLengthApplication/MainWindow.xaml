@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:DevLengthApplication"
         xmlns:vm="clr-namespace:DevLengthApplication.ViewModels"
         mc:Ignorable="d"
-        Title="Development Length Calculator v1.01" Width="1400" Height="550"
+        Title="Development Length Calculator v1.02" Width="1400" Height="550"
         Loaded="OnWindowLoaded">
     <!--<Window.Resources>
         <DataTemplate DataType="{x:Type vm:KtrViewModel}">
