@@ -1,3 +1,0 @@
-DevLengthApplication Release Update History
-2021-09-21 -- v1.00 Initial release.  Handles straight and standard hook development lengths.  Includes basic graphic sketching for each.
-2021-09-24 -- v1.01 Added functionality to compute Ktr for straight bars rather than always conservatively assuming KTR=0
