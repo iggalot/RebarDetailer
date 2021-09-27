@@ -1,4 +1,4 @@
-﻿using ACI318_19Library.DevelopmentLength;
+﻿using ACI318_19Library;
 
 namespace DevLengthApplication.Models
 {
@@ -14,7 +14,7 @@ namespace DevLengthApplication.Models
             Ktr_Model = null;
         }
 
-        public InputModel(ACI318_19Library.DevelopmentLength.DevelopmentLengthTypes type, KtrModel ktrmodel)
+        public InputModel(DevelopmentLengthTypes type, KtrModel ktrmodel)
         {
             Ktr_Model = (ktrmodel == null) ? new KtrModel() : ktrmodel;
 

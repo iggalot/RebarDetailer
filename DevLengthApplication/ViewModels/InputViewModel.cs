@@ -1,4 +1,4 @@
-﻿using ACI318_19Library.DevelopmentLength;
+﻿using ACI318_19Library;
 using DevLengthApplication.Models;
 using DrawingHelpersLibrary;
 using System;
@@ -97,11 +97,11 @@ namespace DevLengthApplication.ViewModels
             {
                 switch (Model.DevelopmentLengthObject.DevLengthType)
                 {
-                    case ACI318_19Library.DevelopmentLength.DevelopmentLengthTypes.DEV_LENGTH_UNDEFINED:
+                    case DevelopmentLengthTypes.DEV_LENGTH_UNDEFINED:
                         break;
-                    case ACI318_19Library.DevelopmentLength.DevelopmentLengthTypes.DEV_LENGTH_STRAIGHT:
+                    case DevelopmentLengthTypes.DEV_LENGTH_STRAIGHT:
                         return (((StraightDevelopmentLength)Model.DevelopmentLengthObject).TopBarStatus);
-                    case ACI318_19Library.DevelopmentLength.DevelopmentLengthTypes.DEV_LENGTH_STANDARD_HOOK:
+                    case DevelopmentLengthTypes.DEV_LENGTH_STANDARD_HOOK:
                         break;
                     default:
                         break;
@@ -185,11 +185,11 @@ namespace DevLengthApplication.ViewModels
             {
                 switch (Model.DevelopmentLengthObject.DevLengthType)
                 {
-                    case ACI318_19Library.DevelopmentLength.DevelopmentLengthTypes.DEV_LENGTH_UNDEFINED:
+                    case DevelopmentLengthTypes.DEV_LENGTH_UNDEFINED:
                         break;
-                    case ACI318_19Library.DevelopmentLength.DevelopmentLengthTypes.DEV_LENGTH_STRAIGHT:
+                    case DevelopmentLengthTypes.DEV_LENGTH_STRAIGHT:
                         break;
-                    case ACI318_19Library.DevelopmentLength.DevelopmentLengthTypes.DEV_LENGTH_STANDARD_HOOK:
+                    case DevelopmentLengthTypes.DEV_LENGTH_STANDARD_HOOK:
                         return (((HookDevelopmentLength)Model.DevelopmentLengthObject).TerminateInsideColumnStatus);
                     default:
                         break;
@@ -201,7 +201,7 @@ namespace DevLengthApplication.ViewModels
         /// <summary>
         /// Default constructor
         /// </summary>
-        public InputViewModel(ACI318_19Library.DevelopmentLength.DevelopmentLengthTypes type)
+        public InputViewModel(DevelopmentLengthTypes type)
         {
             // check if we have a ktr view model yet.  If not create a default one.
             if(KTR_VM == null)
@@ -216,7 +216,7 @@ namespace DevLengthApplication.ViewModels
             if (KTR_VM == null)
                 KTR_VM = new KtrViewModel();
 
-            Model = new InputModel(ACI318_19Library.DevelopmentLength.DevelopmentLengthTypes.DEV_LENGTH_UNDEFINED, KTR_VM.Model);
+            Model = new InputModel(DevelopmentLengthTypes.DEV_LENGTH_UNDEFINED, KTR_VM.Model);
         }
 
         /// <summary>
@@ -463,7 +463,7 @@ namespace DevLengthApplication.ViewModels
                     case DevelopmentLengthTypes.DEV_LENGTH_STRAIGHT:
                         {
                             double ins_x = bb1_x;
-                            double ins_y = 0.5*(bb1_y + bb4_y);
+                            double ins_y = 0.5 * (bb1_y + bb4_y);
                             double end_x = bb1_x + len * scale_factor;
                             double end_y = ins_y;
 
@@ -476,18 +476,15 @@ namespace DevLengthApplication.ViewModels
                             DrawingHelpers.DrawLine(c, ins_x, ins_y, end_x, end_y, Brushes.Black, line_thick);
 
                             // Draw dimensions for LD
-                            DrawingHelpers.DrawLine(c, ins_x, ins_y - line_thick, ins_x, 0.2 * bb_height, Brushes.Green, 1, Linetypes.LINETYPE_PHANTOM);
-                            DrawingHelpers.DrawLine(c, end_x, end_y - line_thick, end_x, 0.2 * bb_height, Brushes.Green, 1, Linetypes.LINETYPE_PHANTOM);
-                            DrawingHelpers.DrawLine(c, ins_x, 0.22 * bb_height, end_x, 0.22 * bb_height, Brushes.Green, 1, Linetypes.LINETYPE_PHANTOM);
-                            DrawingHelpers.DrawText(c, 0.5 * (ins_x + end_x)-30, 0.20 * height, 0, "Ld: " + straightModel.DevLength().ToString() + "in.", Brushes.Green, 15);
+                            DrawingHelpers.DrawHorizontalDimension_Above(c, 0.1 * bb_height, 0.3, 10, ins_x, ins_y, end_x, end_y, "Ld: " + straightModel.DevLength().ToString() + "in.",Linetypes.LINETYPE_PHANTOM);
 
                             // Draw arrow and bar size
                             DrawingHelpers.DrawArrowUp(c, 0.5 * (ins_x + end_x), 0.5 * (ins_y + end_y) + 0.5 * line_thick, Brushes.Red, Brushes.Red, 2, 0.1 * height, 0.035 * height);
-                            DrawingHelpers.DrawText(c, 0.5 * (ins_x + end_x)-15, 0.5 * (ins_y + end_y) + 0.1 * height, 0, "#" + straightModel.BarSize.ToString(), Brushes.Black, 25);
+                            DrawingHelpers.DrawText(c, 0.5 * (ins_x + end_x) - 15, 0.5 * (ins_y + end_y) + 0.1 * height, 0, "#" + straightModel.BarSize.ToString(), Brushes.Black, 25);
 
                             // Draw the critical location line
-                            DrawingHelpers.DrawLine(c, ins_x-5, ins_y - 0.3 * height, ins_x-5, ins_y + 0.3 * height, Brushes.Blue, 2, Linetypes.LINETYPE_DASHED);
-                            DrawingHelpers.DrawText(c, ins_x-18, ins_y + 0.3 * height, 0, "crit. loc.", Brushes.Black, 12);
+                            DrawingHelpers.DrawLine(c, ins_x - 5, ins_y - 0.3 * height, ins_x - 5, ins_y + 0.3 * height, Brushes.Blue, 2, Linetypes.LINETYPE_DASHED);
+                            DrawingHelpers.DrawText(c, ins_x - 18, ins_y + 0.3 * height, 0, "crit. loc.", Brushes.Black, 12);
 
                             break;
                         }
@@ -574,16 +571,15 @@ namespace DevLengthApplication.ViewModels
                             DrawingHelpers.DrawText(c, ldh2_x - 35, lext1_y + 0.5 * hookModel.BendDia * scale_factor + 0.15 * height, 0, "Dia.=" + hookModel.BarSize.ToString() + "in.", Brushes.Blue, 15);
 
                             // Draw dimensions for LDH
-                            DrawingHelpers.DrawLine(c, ldh1_x, ldh1_y - 10, ldh1_x, 0.02 * height, Brushes.Green, 1, Linetypes.LINETYPE_PHANTOM);
-                            DrawingHelpers.DrawLine(c, lext1_x + 0.5*line_thick, lext1_y - 30, lext1_x + 0.5*line_thick, 0.02 * height, Brushes.Green, 1, Linetypes.LINETYPE_PHANTOM);
-                            DrawingHelpers.DrawLine(c, ldh1_x, 0.03 * height, lext1_x + 0.5*line_thick, 0.03 * height, Brushes.Green, 1, Linetypes.LINETYPE_PHANTOM);
-                            DrawingHelpers.DrawText(c, 0.5 * (ldh1_x + ldh2_x), 0.03 * height, 0, "Ldh: " + hookModel.DevLength().ToString() + "in.", Brushes.Green, 15);
+                            DrawingHelpers.DrawHorizontalDimension_Above(c, 0.05 * bb_height, 0.05, 10, ldh1_x, ldh1_y, ldh2_x, ldh2_y, "Ldh: " + hookModel.DevLength().ToString() + "in.", Linetypes.LINETYPE_PHANTOM);
+
+                            //DrawingHelpers.DrawLine(c, ldh1_x, ldh1_y - 10, ldh1_x, 0.02 * height, Brushes.Green, 1, Linetypes.LINETYPE_PHANTOM);
+                            //DrawingHelpers.DrawLine(c, lext1_x + 0.5*line_thick, lext1_y - 30, lext1_x + 0.5*line_thick, 0.02 * height, Brushes.Green, 1, Linetypes.LINETYPE_PHANTOM);
+                            //DrawingHelpers.DrawLine(c, ldh1_x, 0.03 * height, lext1_x + 0.5*line_thick, 0.03 * height, Brushes.Green, 1, Linetypes.LINETYPE_PHANTOM);
+                            //DrawingHelpers.DrawText(c, 0.5 * (ldh1_x + ldh2_x), 0.03 * height, 0, "Ldh: " + hookModel.DevLength().ToString() + "in.", Brushes.Green, 15);
 
                             // Draw dimensions for L_EXT
-                            DrawingHelpers.DrawLine(c, lext1_x + line_thick + 10, lext1_y, lext1_x + line_thick + 0.20 * width, lext1_y, Brushes.Green, 1, Linetypes.LINETYPE_PHANTOM);
-                            DrawingHelpers.DrawLine(c, lext2_x + line_thick + 10, lext2_y, lext2_x + line_thick + 0.20 * width, lext2_y, Brushes.Green, 1, Linetypes.LINETYPE_PHANTOM);
-                            DrawingHelpers.DrawLine(c, lext1_x + line_thick + 0.15 * width, lext1_y, lext2_x + line_thick + 0.15 * width, lext2_y, Brushes.Green, 1, Linetypes.LINETYPE_PHANTOM);
-                            DrawingHelpers.DrawText(c, lext1_x + line_thick, 0.5*(lext1_y + lext2_y) - 15, 0, "L_EXT: \n  " + hookModel.L_EXT.ToString() + "in.", Brushes.Green, 15);
+                            DrawingHelpers.DrawVerticalDimension_Right(c, 0.1 * bb_height, 0.3, 10, lext1_x, lext1_y, lext2_x, lext2_y, "Lext: \n" + hookModel.L_EXT.ToString() + "in.", Linetypes.LINETYPE_PHANTOM);
 
                             // Draw arrow and bar size
                             DrawingHelpers.DrawArrowUp(c, 0.25 * (ldh1_x + ldh2_x), 0.5 * (ldh1_y + ldh2_y) + 0.5 * line_thick, Brushes.Red, Brushes.Red, 2, 0.1* height, 0.035 * height);
@@ -593,9 +589,6 @@ namespace DevLengthApplication.ViewModels
                             DrawingHelpers.DrawLine(c, ldh1_x-5, bb1_y, ldh1_x-5, bb4_y, Brushes.Blue, 2, Linetypes.LINETYPE_DASHED);
                             DrawingHelpers.DrawText(c, ldh1_x-17, bb4_y, 0, "crit. loc.", Brushes.Black, 12);
 
-
-
-
                             break;
                         }
                     default:
@@ -603,5 +596,7 @@ namespace DevLengthApplication.ViewModels
                 }
             }
         }
+
+
     }
 }
