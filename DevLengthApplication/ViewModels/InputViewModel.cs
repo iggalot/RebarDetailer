@@ -1,11 +1,7 @@
-﻿using DevLengthApplication.Models;
-using RebarDetailsLibrary;
+﻿using ACI318_19Library.DevelopmentLength;
+using DevLengthApplication.Models;
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
@@ -101,11 +97,11 @@ namespace DevLengthApplication.ViewModels
             {
                 switch (Model.DevelopmentLengthObject.DevLengthType)
                 {
-                    case RebarDetailsLibrary.DevelopmentLengthTypes.DEV_LENGTH_UNDEFINED:
+                    case ACI318_19Library.DevelopmentLength.DevelopmentLengthTypes.DEV_LENGTH_UNDEFINED:
                         break;
-                    case RebarDetailsLibrary.DevelopmentLengthTypes.DEV_LENGTH_STRAIGHT:
+                    case ACI318_19Library.DevelopmentLength.DevelopmentLengthTypes.DEV_LENGTH_STRAIGHT:
                         return (((StraightDevelopmentLength)Model.DevelopmentLengthObject).TopBarStatus);
-                    case RebarDetailsLibrary.DevelopmentLengthTypes.DEV_LENGTH_STANDARD_HOOK:
+                    case ACI318_19Library.DevelopmentLength.DevelopmentLengthTypes.DEV_LENGTH_STANDARD_HOOK:
                         break;
                     default:
                         break;
@@ -189,11 +185,11 @@ namespace DevLengthApplication.ViewModels
             {
                 switch (Model.DevelopmentLengthObject.DevLengthType)
                 {
-                    case RebarDetailsLibrary.DevelopmentLengthTypes.DEV_LENGTH_UNDEFINED:
+                    case ACI318_19Library.DevelopmentLength.DevelopmentLengthTypes.DEV_LENGTH_UNDEFINED:
                         break;
-                    case RebarDetailsLibrary.DevelopmentLengthTypes.DEV_LENGTH_STRAIGHT:
+                    case ACI318_19Library.DevelopmentLength.DevelopmentLengthTypes.DEV_LENGTH_STRAIGHT:
                         break;
-                    case RebarDetailsLibrary.DevelopmentLengthTypes.DEV_LENGTH_STANDARD_HOOK:
+                    case ACI318_19Library.DevelopmentLength.DevelopmentLengthTypes.DEV_LENGTH_STANDARD_HOOK:
                         return (((HookDevelopmentLength)Model.DevelopmentLengthObject).TerminateInsideColumnStatus);
                     default:
                         break;
@@ -205,7 +201,7 @@ namespace DevLengthApplication.ViewModels
         /// <summary>
         /// Default constructor
         /// </summary>
-        public InputViewModel(RebarDetailsLibrary.DevelopmentLengthTypes type)
+        public InputViewModel(ACI318_19Library.DevelopmentLength.DevelopmentLengthTypes type)
         {
             // check if we have a ktr view model yet.  If not create a default one.
             if(KTR_VM == null)
@@ -220,7 +216,7 @@ namespace DevLengthApplication.ViewModels
             if (KTR_VM == null)
                 KTR_VM = new KtrViewModel();
 
-            Model = new InputModel(RebarDetailsLibrary.DevelopmentLengthTypes.DEV_LENGTH_UNDEFINED, KTR_VM.Model);
+            Model = new InputModel(ACI318_19Library.DevelopmentLength.DevelopmentLengthTypes.DEV_LENGTH_UNDEFINED, KTR_VM.Model);
         }
 
         /// <summary>

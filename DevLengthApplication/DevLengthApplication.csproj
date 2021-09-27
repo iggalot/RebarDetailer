@@ -106,9 +106,9 @@
     <Folder Include="Views\" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\RebarDetailsLibrary\RebarDetailsLibrary.csproj">
-      <Project>{62fcf263-8993-4dda-8bea-0771ab5953c0}</Project>
-      <Name>RebarDetailsLibrary</Name>
+    <ProjectReference Include="..\..\ACI318_19Library\ACI318_19Library.csproj">
+      <Project>{ef65150e-c9d4-4d2d-af2c-5f7bf62d76e7}</Project>
+      <Name>ACI318_19Library</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

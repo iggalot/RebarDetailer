@@ -1,5 +1,4 @@
-﻿using RebarDetailsLibrary;
-using System.Collections.Generic;
+﻿using ACI318_19Library.DevelopmentLength;
 
 namespace DevLengthApplication.Models
 {
@@ -15,7 +14,7 @@ namespace DevLengthApplication.Models
             Ktr_Model = null;
         }
 
-        public InputModel(RebarDetailsLibrary.DevelopmentLengthTypes type, KtrModel ktrmodel)
+        public InputModel(ACI318_19Library.DevelopmentLength.DevelopmentLengthTypes type, KtrModel ktrmodel)
         {
             Ktr_Model = (ktrmodel == null) ? new KtrModel() : ktrmodel;
 
