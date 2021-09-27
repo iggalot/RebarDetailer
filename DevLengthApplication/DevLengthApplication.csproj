@@ -56,7 +56,6 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="Helpers\DrawingHelpers.cs" />
     <Compile Include="Models\InputModel.cs" />
     <Compile Include="Models\KtrModel.cs" />
     <Compile Include="Models\RebarModel.cs" />
@@ -109,6 +108,10 @@
     <ProjectReference Include="..\..\ACI318_19Library\ACI318_19Library.csproj">
       <Project>{ef65150e-c9d4-4d2d-af2c-5f7bf62d76e7}</Project>
       <Name>ACI318_19Library</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\DrawingHelperLibrary\DrawingHelpersLibrary\DrawingHelpersLibrary.csproj">
+      <Project>{8b758ae0-4a37-4642-a50f-23f18cb55ba2}</Project>
+      <Name>DrawingHelpersLibrary</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

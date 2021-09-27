@@ -1,11 +1,11 @@
 ﻿using ACI318_19Library.DevelopmentLength;
 using DevLengthApplication.Models;
+using DrawingHelpersLibrary;
 using System;
 using System.Collections.ObjectModel;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
-using VMDiagrammer.Helpers;
 
 namespace DevLengthApplication.ViewModels
 {
