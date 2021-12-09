@@ -7,7 +7,7 @@
     <ProjectGuid>{D453B8D4-98B6-4665-AFD8-1B72FD588735}</ProjectGuid>
     <OutputType>WinExe</OutputType>
     <RootNamespace>DevLengthApplication</RootNamespace>
-    <AssemblyName>DevLengthApplication</AssemblyName>
+    <AssemblyName>DevLengthApplication_v1_03</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
@@ -58,7 +58,6 @@
     </ApplicationDefinition>
     <Compile Include="Models\InputModel.cs" />
     <Compile Include="Models\KtrModel.cs" />
-    <Compile Include="Models\RebarModel.cs" />
     <Compile Include="ViewModels\BaseViewModel.cs" />
     <Compile Include="ViewModels\InputViewModel.cs" />
     <Compile Include="ViewModels\KtrViewModel.cs" />

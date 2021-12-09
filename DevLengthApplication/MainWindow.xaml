@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:DevLengthApplication"
         xmlns:vm="clr-namespace:DevLengthApplication.ViewModels"
         mc:Ignorable="d"
-        Title="Development Length Calculator v1.02" Width="1400" Height="550"
+        Title="Development Length Calculator v1.03" Width="1400" Height="550"
         Loaded="OnWindowLoaded">
     <!--<Window.Resources>
         <DataTemplate DataType="{x:Type vm:KtrViewModel}">
@@ -28,7 +28,6 @@
                         <RowDefinition Height="*"/>
                         <RowDefinition Height="*"/>
                     </Grid.RowDefinitions>
-                    <!--<TextBlock Name="tbDevelopmentLengthStraight" FontSize="20" Text= "{Binding GetDevelopmentLengthStraight}" Width="75" Height="30" Background="Gray"/>-->
                     <ComboBox Grid.Row="0" Grid.ColumnSpan="3" Name="cmbDevelopmentBarType" Margin="10" Width="300" Height="25" HorizontalAlignment="Center" SelectionChanged="cmbSelectionChanged"/>
 
                     <!--<Label Grid.Row="1" Grid.Column="0" Content="Bar #" HorizontalAlignment="Center"/>-->

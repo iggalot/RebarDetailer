@@ -1,4 +1,5 @@
-﻿using DevLengthApplication.ViewModels;
+﻿using ACI318_19Library;
+using DevLengthApplication.ViewModels;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -10,12 +11,18 @@ namespace DevLengthApplication
     /// </summary>
     public partial class MainWindow : Window
     {
+        static int DEFAULT_BAR_NUM = 4;
+        static float DEFAULT_YIELD_STR = 60000;
+        static float DEFAULT_CONCRETE_COMP_STR = 3000;
+        static bool DEFAULT_DEBUG_MODE = false;
+        static DevelopmentLengthTypes DEFAULT_DEV_LENGTH_TYPE = DevelopmentLengthTypes.DEV_LENGTH_UNDEFINED;
+       
         private InputViewModel InputVM { get; set; }
         public bool bWindowFinishedLoading = false;
 
         public MainWindow()
         {
-            InputVM = new InputViewModel();
+            InputVM = new InputViewModel(DEFAULT_DEV_LENGTH_TYPE, DEFAULT_BAR_NUM, DEFAULT_YIELD_STR, DEFAULT_CONCRETE_COMP_STR, DEFAULT_DEBUG_MODE);
 
             InitializeComponent();
 
@@ -31,7 +38,7 @@ namespace DevLengthApplication
         /// </summary>
         private void OnUserCreate()
         {
-            InputVM.Create(this);
+            InputVM.CreateUI(this);
         }
 
         /// <summary>
@@ -54,8 +61,9 @@ namespace DevLengthApplication
             {
                 InputVM.Update();
                 ShowACIDetails();
-                InputVM.DrawCanvas(MainCanvas);
             }
+            InputVM.DrawCanvas(MainCanvas);
+
         }
 
         /// <summary>

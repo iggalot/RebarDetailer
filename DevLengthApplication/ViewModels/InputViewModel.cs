@@ -21,7 +21,7 @@ namespace DevLengthApplication.ViewModels
         /// <summary>
         /// Our development length model basis
         /// </summary>
-        public InputModel Model { get; set; } = new InputModel();
+        public InputModel Model { get; set; }
 
         /// <summary>
         /// The view model for the KTR object
@@ -201,29 +201,20 @@ namespace DevLengthApplication.ViewModels
         /// <summary>
         /// Default constructor
         /// </summary>
-        public InputViewModel(DevelopmentLengthTypes type)
+        public InputViewModel(DevelopmentLengthTypes type, int bar_num, float fc, float fy, bool debug_mode)
         {
             // check if we have a ktr view model yet.  If not create a default one.
             if(KTR_VM == null)
                 KTR_VM = new KtrViewModel();
 
-            Model = new InputModel(type, KTR_VM.Model);
-        }
-
-        public InputViewModel()
-        {
-            // check if we have a ktr view model yet.  If not create a default one.
-            if (KTR_VM == null)
-                KTR_VM = new KtrViewModel();
-
-            Model = new InputModel(DevelopmentLengthTypes.DEV_LENGTH_UNDEFINED, KTR_VM.Model);
+            Model = new InputModel(type, bar_num, fc, fy, debug_mode, KTR_VM.Model);
         }
 
         /// <summary>
         /// Setup the view model for this window
         /// </summary>
         /// <param name="window"></param>
-        public void Create(MainWindow window)
+        public void CreateUI(MainWindow window)
         {
             MainWin = window;
 
@@ -301,7 +292,7 @@ namespace DevLengthApplication.ViewModels
             window.cmbHasMinTransverseReinf.Items.Add(cbi7);
             window.cmbHasMinTransverseReinf.SelectedItem = window.cmbHasMinTransverseReinf.Items[1];
 
-            // Create the develope bar type (straight, standard hook, ties, etc)
+            // Create the develop bar type (straight, standard hook, ties, etc)
             foreach (var item in ocDevelopmentLengthTypes)
             {
                 ComboBoxItem cbi8 = new ComboBoxItem();
@@ -400,7 +391,6 @@ namespace DevLengthApplication.ViewModels
             OnPropertyChanged("GetSelectedBarSizeLabel");
             OnPropertyChanged("GetSelectedSteelYieldStrengthLabel");
             OnPropertyChanged("GetSelectedConcreteCompStrengthLabel");
-            OnPropertyChanged("GetDevelopmentLengthStraight");
             OnPropertyChanged("GetEpoxyStatus");
             OnPropertyChanged("GetTopBarStatus");
             OnPropertyChanged("GetLightweightConcreteStatus");

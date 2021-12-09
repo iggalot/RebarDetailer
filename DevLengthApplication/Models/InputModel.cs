@@ -9,12 +9,12 @@ namespace DevLengthApplication.Models
 
         public double LD {get; set;}
 
-        public InputModel() : this(DevelopmentLengthTypes.DEV_LENGTH_UNDEFINED, null)
+        public InputModel(int bar_num, float fc, float fy, bool debug_mode) : this(DevelopmentLengthTypes.DEV_LENGTH_UNDEFINED, bar_num, fc, fy, debug_mode, null)
         {
             Ktr_Model = null;
         }
 
-        public InputModel(DevelopmentLengthTypes type, KtrModel ktrmodel)
+        public InputModel(DevelopmentLengthTypes type, int bar_num, float fc, float fy, bool debug_mode, KtrModel ktrmodel)
         {
             Ktr_Model = (ktrmodel == null) ? new KtrModel() : ktrmodel;
 
@@ -24,9 +24,10 @@ namespace DevLengthApplication.Models
                     DevelopmentLengthObject = new BaseDevelopmentLength();
                     break;
                 case DevelopmentLengthTypes.DEV_LENGTH_STRAIGHT:
-                    DevelopmentLengthObject = new StraightDevelopmentLength(4, 60000, 3000, false, ktrmodel.ComputeKtr());
+                    DevelopmentLengthObject = new StraightDevelopmentLength(bar_num, fy, fc, debug_mode, ktrmodel.ComputeKtr());
                     break;
                 case DevelopmentLengthTypes.DEV_LENGTH_STANDARD_HOOK:
+                    DevelopmentLengthObject = new HookDevelopmentLength(bar_num, fy, fc, debug_mode, HookTypes.HOOK_STANDARD, 90);
                     break;
                 default:
                     break;

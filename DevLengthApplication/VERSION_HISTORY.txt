@@ -1,0 +1,5 @@
+DevLengthApplication Release Update History
+2021-12-09 -- v1.03 Corrected issue with PSI_R where worst case factor was always being used instead of actual computations for standard hooks. Affected larger bar sizes (#6 and larger) more commonly.
+2021-09-27 -- v1.02 Corrected bug in display of bend diameter for hooked bars.  Extracted library functions for ACI and DrawingHelpers.  Addeded functuions for drawing dimension lines directly.
+2021-09-24 -- v1.01 Added functionality to compute Ktr for straight bars rather than always conservatively assuming KTR=0
+2021-09-21 -- v1.00 Initial release.  Handles straight and standard hook development lengths.  Includes basic graphic sketching for each.
